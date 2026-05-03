@@ -5,7 +5,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-// Add page imports here
+import Landing from './pages/Landing';
+import StartCircle from './pages/StartCircle';
+import JoinCircle from './pages/JoinCircle';
+import BrowseFamilies from './pages/BrowseFamilies';
+import MyCircle from './pages/MyCircle';
+import VolunteerDashboard from './pages/VolunteerDashboard';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -33,7 +38,12 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      {/* Add your page Route elements here */}
+      <Route path="/" element={<Landing />} />
+      <Route path="/start-circle" element={<StartCircle />} />
+      <Route path="/join-circle" element={<JoinCircle />} />
+      <Route path="/browse-families" element={<BrowseFamilies />} />
+      <Route path="/my-circle" element={<MyCircle />} />
+      <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

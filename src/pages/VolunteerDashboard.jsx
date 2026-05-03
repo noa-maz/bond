@@ -1,0 +1,174 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays } from "lucide-react";
+import { motion } from "framer-motion";
+
+const OFFER_EMOJI = {
+  Childcare: "👶",
+  Cooking: "🍲",
+  Transportation: "🚗",
+  "Just being there": "💛",
+};
+
+export default function VolunteerDashboard() {
+  const [volunteer, setVolunteer] = useState(null);
+  const [family, setFamily] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    const user = await base44.auth.me();
+    const vols = await base44.entities.Volunteer.filter({
+      user_email: user.email,
+    });
+    const vol = vols[0];
+    setVolunteer(vol);
+
+    if (vol?.committed_family_id) {
+      const fam = await base44.entities.Family.filter({
+        id: vol.committed_family_id,
+      });
+      setFamily(fam[0] || null);
+    }
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!volunteer) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 gap-4">
+        <p className="text-muted-foreground">
+          You haven't signed up as a volunteer yet.
+        </p>
+        <Link to="/join-circle">
+          <Button>Join a circle</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <nav className="flex items-center gap-4 px-6 md:px-12 py-5">
+        <Link to="/">
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+        </Link>
+        <span className="font-serif text-xl tracking-tight">BOND</span>
+      </nav>
+
+      <main className="flex-1 px-6 md:px-12 py-8 max-w-2xl mx-auto w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="space-y-8"
+        >
+          {/* Volunteer info */}
+          <div className="space-y-2">
+            <h1 className="font-serif text-3xl tracking-tight">
+              Hi, {volunteer.name} 👋
+            </h1>
+            <p className="text-muted-foreground">
+              Thank you for being part of someone's circle.
+            </p>
+          </div>
+
+          {/* Your commitment card */}
+          <div className="space-y-3">
+            <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+              Your commitment
+            </h2>
+            <div className="bg-card rounded-2xl border p-5 space-y-3">
+              <div className="flex gap-3 text-sm text-muted-foreground">
+                <span className="inline-flex items-center gap-1">
+                  {OFFER_EMOJI[volunteer.offer_type]} {volunteer.offer_type}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <CalendarDays className="w-3.5 h-3.5" />
+                  {volunteer.available_day}s
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Family card */}
+          {family ? (
+            <div className="space-y-3">
+              <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+                Your family
+              </h2>
+              <div className="bg-card rounded-2xl border p-6 space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-serif text-2xl flex-shrink-0">
+                    {family.name?.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-xl">
+                      {family.name}'s Family
+                    </h3>
+                    <div className="flex flex-wrap gap-3 mt-1 text-sm text-muted-foreground">
+                      <span className="inline-flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5" />
+                        {family.neighborhood}
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <Baby className="w-3.5 h-3.5" />
+                        {family.number_of_children}{" "}
+                        {family.number_of_children === 1
+                          ? "child"
+                          : "children"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {family.hardest_lately && (
+                  <div className="bg-secondary/50 rounded-xl px-4 py-3">
+                    <p className="text-sm text-muted-foreground italic leading-relaxed">
+                      "{family.hardest_lately}"
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2 text-primary text-sm font-medium pt-1">
+                  <Heart className="w-4 h-4 fill-primary" />
+                  You're committed to this family
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+                Your family
+              </h2>
+              <div className="text-center py-12 bg-card rounded-2xl border space-y-3">
+                <p className="text-muted-foreground">
+                  You haven't committed to a family yet.
+                </p>
+                <Link to="/browse-families">
+                  <Button variant="outline" className="rounded-xl">
+                    Browse families
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </main>
+    </div>
+  );
+}

@@ -1,0 +1,50 @@
+{
+  "name": "Volunteer",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "neighborhood": {
+      "type": "string",
+      "title": "Neighborhood"
+    },
+    "offer_type": {
+      "type": "string",
+      "title": "What they can offer",
+      "enum": [
+        "Childcare",
+        "Cooking",
+        "Transportation",
+        "Just being there"
+      ]
+    },
+    "available_day": {
+      "type": "string",
+      "title": "Available Day",
+      "enum": [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ]
+    },
+    "committed_family_id": {
+      "type": "string",
+      "title": "Committed Family ID"
+    },
+    "user_email": {
+      "type": "string",
+      "title": "User Email"
+    }
+  },
+  "required": [
+    "name",
+    "neighborhood",
+    "offer_type",
+    "available_day"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Family",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "neighborhood": {
+      "type": "string",
+      "title": "Neighborhood"
+    },
+    "number_of_children": {
+      "type": "number",
+      "title": "Number of Children"
+    },
+    "hardest_lately": {
+      "type": "string",
+      "title": "What's been hardest lately?"
+    },
+    "user_email": {
+      "type": "string",
+      "title": "User Email"
+    }
+  },
+  "required": [
+    "name",
+    "neighborhood",
+    "number_of_children"
+  ]
+}
