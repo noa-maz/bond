@@ -29,6 +29,13 @@ export default function MyCircle() {
       });
       setVolunteers(allVols);
     }
+  };
+
+  const handleApprove = async (volunteerId) => {
+    await base44.entities.Volunteer.update(volunteerId, { approved: true });
+    setVolunteers((prev) =>
+      prev.map((v) => (v.id === volunteerId ? { ...v, approved: true } : v))
+    );
     setLoading(false);
   };
 
@@ -96,33 +103,67 @@ export default function MyCircle() {
             )}
           </div>
 
-          {/* Volunteers */}
+          {/* Pending approval */}
+          {volunteers.filter((v) => !v.approved).length > 0 && (
+            <div className="space-y-3">
+              <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+                Waiting for your approval
+              </h2>
+              <div className="space-y-3">
+                {volunteers
+                  .filter((v) => !v.approved)
+                  .map((vol) => (
+                    <div
+                      key={vol.id}
+                      className="flex items-center gap-4 bg-card rounded-xl border border-dashed p-4"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-semibold flex-shrink-0">
+                        {vol.name?.charAt(0).toUpperCase() || "?"}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium">{vol.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          ✨ {vol.offer_types?.join(", ")}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleApprove(vol.id)}
+                        className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+                      >
+                        Accept
+                      </button>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Approved circle */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" />
               <h2 className="font-semibold text-lg">
-                Your circle ({volunteers.length})
+                Your circle ({volunteers.filter((v) => v.approved).length})
               </h2>
             </div>
 
-            {volunteers.length === 0 ? (
+            {volunteers.filter((v) => v.approved).length === 0 ? (
               <div className="text-center py-12 bg-card rounded-2xl border space-y-3">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
                   <Heart className="w-7 h-7 text-primary" />
                 </div>
-                <p className="text-muted-foreground">
-                  Your circle is forming…
-                </p>
+                <p className="text-muted-foreground">Your circle is forming…</p>
                 <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-                  Volunteers in your area will see your profile and commit to
-                  supporting you.
+                  Volunteers in your area will see your profile and commit to supporting you.
                 </p>
               </div>
             ) : (
               <div className="space-y-3">
-                {volunteers.map((vol) => (
-                  <CircleMember key={vol.id} volunteer={vol} />
-                ))}
+                {volunteers
+                  .filter((v) => v.approved)
+                  .map((vol) => (
+                    <CircleMember key={vol.id} volunteer={vol} />
+                  ))}
               </div>
             )}
           </div>

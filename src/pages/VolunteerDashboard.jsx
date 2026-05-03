@@ -95,11 +95,11 @@ export default function VolunteerDashboard() {
             <div className="bg-card rounded-2xl border p-5 space-y-3">
               <div className="flex gap-3 text-sm text-muted-foreground">
                 <span className="inline-flex items-center gap-1">
-                  {OFFER_EMOJI[volunteer.offer_type]} {volunteer.offer_type}
+                  ✨ {volunteer.offer_types?.join(", ")}
                 </span>
                 <span className="inline-flex items-center gap-1">
                   <CalendarDays className="w-3.5 h-3.5" />
-                  {volunteer.available_day}s
+                  {volunteer.frequency}
                 </span>
               </div>
             </div>

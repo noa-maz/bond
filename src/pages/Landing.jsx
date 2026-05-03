@@ -112,9 +112,7 @@ export default function Landing() {
               </div>
             ))}
           </div>
-          <p className="text-sm text-muted-foreground">
-            Neighbors helping neighbors, one family at a time
-          </p>
+
         </motion.div>
       </main>
       <footer className="text-center py-6 text-sm text-muted-foreground border-t">

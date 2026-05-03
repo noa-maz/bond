@@ -37,6 +37,10 @@
       "type": "string",
       "title": "Committed Family ID"
     },
+    "approved": {
+      "type": "boolean",
+      "title": "Approved by Family"
+    },
     "user_email": {
       "type": "string",
       "title": "User Email"

@@ -17,11 +17,11 @@ export default function CircleMember({ volunteer }) {
         <p className="font-medium">{volunteer.name}</p>
         <div className="flex flex-wrap gap-2 mt-0.5 text-sm text-muted-foreground">
           <span>
-            {OFFER_EMOJI[volunteer.offer_type] || "✨"} {volunteer.offer_type}
+            ✨ {volunteer.offer_types?.join(", ")}
           </span>
           <span className="inline-flex items-center gap-1">
             <CalendarDays className="w-3.5 h-3.5" />
-            {volunteer.available_day}s
+            {volunteer.frequency}
           </span>
         </div>
       </div>
