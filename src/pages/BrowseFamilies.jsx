@@ -84,7 +84,7 @@ export default function BrowseFamilies() {
               Choose a family to support
             </h1>
             <p className="text-muted-foreground">
-              Browse families in your area and commit to one. This is a weekly
+              Browse families in your area and commit to one. This is an ongoing
               commitment — not a one-time thing.
             </p>
           </div>
