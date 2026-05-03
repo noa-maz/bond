@@ -10,26 +10,27 @@
       "type": "string",
       "title": "Neighborhood"
     },
-    "offer_type": {
-      "type": "string",
+    "offer_types": {
+      "type": "array",
       "title": "What they can offer",
-      "enum": [
-        "Childcare",
-        "Cooking",
-        "Transportation",
-        "Just being there"
-      ]
+      "items": {
+        "type": "string",
+        "enum": [
+          "Childcare",
+          "Cooking",
+          "Transportation",
+          "Just being there"
+        ]
+      }
     },
-    "available_day": {
+    "frequency": {
       "type": "string",
-      "title": "Available Day",
+      "title": "Availability Frequency",
       "enum": [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
+        "Once a week",
+        "Twice a month",
+        "Once a month",
+        "Flexible - I'll coordinate with my circle"
       ]
     },
     "committed_family_id": {
@@ -44,7 +45,7 @@
   "required": [
     "name",
     "neighborhood",
-    "offer_type",
-    "available_day"
+    "offer_types",
+    "frequency"
   ]
 }

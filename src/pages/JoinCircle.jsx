@@ -15,7 +15,12 @@ import { ArrowLeft, Users, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const OFFERS = ["Childcare", "Cooking", "Transportation", "Just being there"];
-const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+const FREQUENCIES = [
+  "Once a week",
+  "Twice a month",
+  "Once a month",
+  "Flexible - I'll coordinate with my circle",
+];
 
 export default function JoinCircle() {
   const navigate = useNavigate();
@@ -23,9 +28,17 @@ export default function JoinCircle() {
   const [form, setForm] = useState({
     name: "",
     neighborhood: "",
-    offer_type: "",
-    available_day: "",
+    offer_types: [],
+    frequency: "",
   });
+
+  const toggleOffer = (offer) =>
+    setForm((f) => ({
+      ...f,
+      offer_types: f.offer_types.includes(offer)
+        ? f.offer_types.filter((o) => o !== offer)
+        : [...f.offer_types, offer],
+    }));
 
   const update = (field) => (e) =>
     setForm((f) => ({ ...f, [field]: e.target.value }));
@@ -33,14 +46,17 @@ export default function JoinCircle() {
     setForm((f) => ({ ...f, [field]: val }));
 
   const canSubmit =
-    form.name && form.neighborhood && form.offer_type && form.available_day;
+    form.name && form.neighborhood && form.offer_types.length > 0 && form.frequency;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     const user = await base44.auth.me();
     await base44.entities.Volunteer.create({
-      ...form,
+      name: form.name,
+      neighborhood: form.neighborhood,
+      offer_types: form.offer_types,
+      frequency: form.frequency,
       user_email: user.email,
     });
     navigate("/browse-families");
@@ -104,37 +120,38 @@ export default function JoinCircle() {
             </div>
 
             <div className="space-y-2">
-              <Label>What can you offer?</Label>
+              <Label>What can you offer? <span className="text-muted-foreground font-normal">(choose all that apply)</span></Label>
+              <div className="grid grid-cols-2 gap-2">
+                {OFFERS.map((o) => (
+                  <button
+                    key={o}
+                    type="button"
+                    onClick={() => toggleOffer(o)}
+                    className={`h-12 px-4 rounded-xl border text-sm font-medium text-left transition-colors ${
+                      form.offer_types.includes(o)
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-card border-border hover:bg-secondary"
+                    }`}
+                  >
+                    {o}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>How often could you realistically show up?</Label>
               <Select
-                value={form.offer_type}
-                onValueChange={updateSelect("offer_type")}
+                value={form.frequency}
+                onValueChange={updateSelect("frequency")}
               >
                 <SelectTrigger className="h-12 rounded-xl bg-card">
                   <SelectValue placeholder="Choose one…" />
                 </SelectTrigger>
                 <SelectContent>
-                  {OFFERS.map((o) => (
-                    <SelectItem key={o} value={o}>
-                      {o}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Which day works best?</Label>
-              <Select
-                value={form.available_day}
-                onValueChange={updateSelect("available_day")}
-              >
-                <SelectTrigger className="h-12 rounded-xl bg-card">
-                  <SelectValue placeholder="Choose a day…" />
-                </SelectTrigger>
-                <SelectContent>
-                  {DAYS.map((d) => (
-                    <SelectItem key={d} value={d}>
-                      {d}
+                  {FREQUENCIES.map((f) => (
+                    <SelectItem key={f} value={f}>
+                      {f}
                     </SelectItem>
                   ))}
                 </SelectContent>
