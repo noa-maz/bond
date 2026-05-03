@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Heart, Loader2 } from "lucide-react";
+import NeedsSelector from "../components/NeedsSelector";
 import { motion } from "framer-motion";
 
 export default function StartCircle() {
@@ -15,6 +16,7 @@ export default function StartCircle() {
     name: "",
     neighborhood: "",
     number_of_children: "",
+    needs: {},
     hardest_lately: "",
   });
 
@@ -103,6 +105,14 @@ export default function StartCircle() {
                 value={form.number_of_children}
                 onChange={update("number_of_children")}
                 className="h-12 rounded-xl bg-card"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>What kind of help do you need?</Label>
+              <NeedsSelector
+                value={form.needs}
+                onChange={(needs) => setForm((f) => ({ ...f, needs }))}
               />
             </div>
 
