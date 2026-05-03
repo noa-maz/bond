@@ -16,10 +16,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-5">
-        <span className="font-serif text-2xl tracking-tight text-foreground">
-          BOND
-        </span>
+      <nav className="flex items-center justify-end px-6 md:px-12 py-5">
         <div className="flex gap-3">
           <Link to="/start-circle">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
@@ -35,46 +32,37 @@ export default function Landing() {
       </nav>
 
       {/* Hero */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 pb-20">
+      <main className="flex-1 flex flex-col items-center justify-center px-6 pb-24">
         <motion.div
-          className="max-w-2xl text-center space-y-8"
+          className="max-w-2xl text-center space-y-10"
           initial="hidden"
           animate="visible"
-          variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+          variants={{ visible: { transition: { staggerChildren: 0.18 } } }}
         >
-          {/* Badge */}
-          <motion.div custom={0} variants={fadeUp} className="flex justify-center">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium">
-              <Heart className="w-3.5 h-3.5" />
-              Community support for reserve-duty families
-            </span>
-          </motion.div>
-
-          {/* Heading */}
+          {/* BOND */}
           <motion.h1
-            custom={1}
+            custom={0}
             variants={fadeUp}
-            className="font-serif text-5xl md:text-7xl leading-[1.1] tracking-tight text-foreground"
+            className="font-serif text-[clamp(5rem,18vw,11rem)] leading-none tracking-tight text-foreground"
           >
-            Someone in your corner.{" "}
-            <span className="text-primary">Week after week.</span>
+            BOND
           </motion.h1>
 
-          {/* Subtext */}
+          {/* Tagline */}
           <motion.p
-            custom={2}
+            custom={1}
             variants={fadeUp}
-            className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto leading-relaxed"
+            className="text-xl md:text-2xl text-muted-foreground font-light tracking-wide"
           >
-            BOND connects reserve-duty military wives in Israel with committed
-            local volunteers. Not once — but consistently.
+            Someone in your corner.{" "}
+            <span className="text-primary font-medium">For real.</span>
           </motion.p>
 
           {/* CTAs */}
           <motion.div
-            custom={3}
+            custom={2}
             variants={fadeUp}
-            className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
+            className="flex flex-col sm:flex-row gap-4 justify-center pt-2"
           >
             <Link to="/start-circle" className="flex-1 sm:flex-initial">
               <Button
@@ -102,7 +90,7 @@ export default function Landing() {
 
         {/* Trust strip */}
         <motion.div
-          custom={5}
+          custom={4}
           variants={fadeUp}
           initial="hidden"
           animate="visible"
@@ -129,8 +117,6 @@ export default function Landing() {
           </p>
         </motion.div>
       </main>
-
-      {/* Footer */}
       <footer className="text-center py-6 text-sm text-muted-foreground border-t">
         BOND © {new Date().getFullYear()} — Built with love for our communities
       </footer>
