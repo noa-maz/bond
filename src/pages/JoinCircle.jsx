@@ -28,6 +28,7 @@ export default function JoinCircle() {
   const [form, setForm] = useState({
     name: "",
     neighborhood: "",
+    phone: "",
     offer_types: [],
     frequency: "",
   });
@@ -55,6 +56,7 @@ export default function JoinCircle() {
     await base44.entities.Volunteer.create({
       name: form.name,
       neighborhood: form.neighborhood,
+      phone: form.phone || undefined,
       offer_types: form.offer_types,
       frequency: form.frequency,
       user_email: userName,
@@ -117,6 +119,19 @@ export default function JoinCircle() {
                 onChange={update("neighborhood")}
                 className="h-12 rounded-xl bg-card"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone number <span className="text-muted-foreground font-normal">(optional)</span></Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="e.g. 050-1234567"
+                value={form.phone}
+                onChange={update("phone")}
+                className="h-12 rounded-xl bg-card"
+              />
+              <p className="text-xs text-muted-foreground">So the family can reach you directly.</p>
             </div>
 
             <div className="space-y-2">

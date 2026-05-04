@@ -10,6 +10,10 @@
       "type": "string",
       "title": "Neighborhood"
     },
+    "phone": {
+      "type": "string",
+      "title": "Phone Number"
+    },
     "offer_types": {
       "type": "array",
       "title": "What they can offer",

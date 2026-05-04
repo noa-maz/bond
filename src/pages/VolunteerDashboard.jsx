@@ -117,6 +117,7 @@ export default function VolunteerDashboard() {
                       setEditForm({
                         name: volunteer.name,
                         neighborhood: volunteer.neighborhood,
+                        phone: volunteer.phone || '',
                         offer_types: volunteer.offer_types || [],
                         frequency: volunteer.frequency || '',
                       });
@@ -147,6 +148,17 @@ export default function VolunteerDashboard() {
                     onChange={e => setEditForm(f => ({ ...f, neighborhood: e.target.value }))}
                     className="h-11 rounded-xl bg-background"
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label>Phone number <span className="text-muted-foreground font-normal text-xs">(optional)</span></Label>
+                  <Input
+                    type="tel"
+                    value={editForm.phone}
+                    onChange={e => setEditForm(f => ({ ...f, phone: e.target.value }))}
+                    placeholder="e.g. 050-1234567"
+                    className="h-11 rounded-xl bg-background"
+                  />
+                  <p className="text-xs text-muted-foreground">So the family can reach you directly.</p>
                 </div>
                 <div className="space-y-2">
                   <Label>What can you offer?</Label>

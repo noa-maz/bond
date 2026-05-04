@@ -1,4 +1,4 @@
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, Phone } from "lucide-react";
 
 const OFFER_EMOJI = {
   Childcare: "👶",
@@ -24,6 +24,15 @@ export default function CircleMember({ volunteer }) {
             {volunteer.frequency}
           </span>
         </div>
+        {volunteer.phone && (
+          <a
+            href={`tel:${volunteer.phone}`}
+            className="inline-flex items-center gap-1 mt-1 text-sm text-primary hover:underline"
+          >
+            <Phone className="w-3.5 h-3.5" />
+            {volunteer.phone}
+          </a>
+        )}
       </div>
     </div>
   );
