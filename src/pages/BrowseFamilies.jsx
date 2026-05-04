@@ -12,6 +12,7 @@ export default function BrowseFamilies() {
   const [loading, setLoading] = useState(true);
   const [committing, setCommitting] = useState(null);
   const [volunteer, setVolunteer] = useState(null);
+  const [volunteerCountMap, setVolunteerCountMap] = useState({});
 
   useEffect(() => {
     loadData();
@@ -24,14 +25,25 @@ export default function BrowseFamilies() {
     setVolunteer(vol);
 
 
-    const allFamilies = await base44.entities.Family.list();
-    // Show families in the same neighborhood first
+    const [allFamilies, allVolunteers] = await Promise.all([
+      base44.entities.Family.list(),
+      base44.entities.Volunteer.list(),
+    ]);
+
+    const countMap = {};
+    allVolunteers.forEach(v => {
+      (v.committed_family_ids || []).forEach(fid => {
+        countMap[fid] = (countMap[fid] || 0) + 1;
+      });
+    });
+    setVolunteerCountMap(countMap);
+
     const sorted = [...allFamilies].sort((a, b) => {
       const aMatch = a.neighborhood?.toLowerCase() === vol?.neighborhood?.toLowerCase();
       const bMatch = b.neighborhood?.toLowerCase() === vol?.neighborhood?.toLowerCase();
       if (aMatch && !bMatch) return -1;
       if (!aMatch && bMatch) return 1;
-      return 0;
+      return (countMap[a.id] || 0) - (countMap[b.id] || 0);
     });
     setFamilies(sorted);
     setLoading(false);
@@ -110,6 +122,7 @@ export default function BrowseFamilies() {
                   onCommit={handleCommit}
                   isCommitting={committing === family.id}
                   alreadyCommitted={volunteer?.committed_family_ids?.includes(family.id)}
+                  volunteerCount={volunteerCountMap[family.id] || 0}
                 />
               ))}
             </div>
