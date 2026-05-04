@@ -117,6 +117,7 @@ export default function StartCircle() {
                 placeholder="e.g. 3"
                 value={form.number_of_children}
                 onChange={update("number_of_children")}
+                onWheel={e => e.target.blur()}
                 className="h-12 rounded-xl bg-card"
               />
             </div>

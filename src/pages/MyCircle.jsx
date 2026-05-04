@@ -164,8 +164,10 @@ export default function MyCircle() {
                   <Label>Number of children</Label>
                   <Input
                     type="number"
+                    min="0"
                     value={editForm.number_of_children}
-                    onChange={e => setEditForm(f => ({ ...f, number_of_children: Number(e.target.value) }))}
+                    onChange={e => setEditForm(f => ({ ...f, number_of_children: parseInt(e.target.value, 10) || 0 }))}
+                    onWheel={e => e.target.blur()}
                     className="h-11 rounded-xl bg-background"
                   />
                 </div>
