@@ -16,20 +16,23 @@ export default function MyCircle() {
   }, []);
 
   const loadData = async () => {
-    const user = await base44.auth.me();
-    const families = await base44.entities.Family.filter({
-      user_email: user.email,
-    });
-    const fam = families[0];
-    setFamily(fam);
-
-    if (fam) {
-      const allVols = await base44.entities.Volunteer.filter({
-        committed_family_id: fam.id,
+    try {
+      const userName = localStorage.getItem("bond_user_name");
+      const families = await base44.entities.Family.filter({
+        user_email: userName,
       });
-      setVolunteers(allVols);
+      const fam = families[0];
+      setFamily(fam);
+
+      if (fam) {
+        const allVols = await base44.entities.Volunteer.filter({
+          committed_family_id: fam.id,
+        });
+        setVolunteers(allVols);
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleApprove = async (volunteerId) => {
