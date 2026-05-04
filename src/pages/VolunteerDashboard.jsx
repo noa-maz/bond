@@ -277,11 +277,11 @@ export default function VolunteerDashboard() {
                 </div>
 
                 {/* Scheduled visits for this family */}
-                {visits.filter(v => v.family_id === family.id).length > 0 && (
+                {visits.filter(v => v.family_id === family.id && v.volunteer_id === volunteer.id).length > 0 && (
                   <div className="space-y-1">
                     <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Your upcoming visits</p>
                     {visits
-                      .filter(v => v.family_id === family.id)
+                      .filter(v => v.family_id === family.id && v.volunteer_id === volunteer.id)
                       .sort((a, b) => a.date.localeCompare(b.date))
                       .map(v => (
                         <div key={v.id} className="flex items-center gap-2 text-sm text-muted-foreground">
