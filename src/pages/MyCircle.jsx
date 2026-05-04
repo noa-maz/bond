@@ -227,7 +227,7 @@ export default function MyCircle() {
           {volunteers.filter((v) => !v.approved).length > 0 && (
             <div className="space-y-3">
               <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
-                Waiting for your approval
+                Someone wants to join your circle
               </h2>
               <div className="space-y-3">
                 {volunteers
@@ -250,7 +250,7 @@ export default function MyCircle() {
                         onClick={() => handleApprove(vol.id)}
                         className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
                       >
-                        Accept
+                        Welcome her in
                       </button>
                     </div>
                   ))}
@@ -272,9 +272,9 @@ export default function MyCircle() {
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
                   <Heart className="w-7 h-7 text-primary" />
                 </div>
-                <p className="text-muted-foreground">Your circle is forming…</p>
+                <p className="text-muted-foreground">Your circle is on its way.</p>
                 <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-                  Volunteers in your area will see your profile and commit to supporting you.
+                  Neighbors who want to show up will find you here.
                 </p>
               </div>
             ) : (

@@ -128,7 +128,7 @@ export default function VolunteerDashboard() {
                   </Button>
                 </div>
                 <p className="text-muted-foreground">
-                  Thank you for being part of someone's circle.
+                  Showing up matters more than you know.
                 </p>
               </>
             ) : (
@@ -246,7 +246,7 @@ export default function VolunteerDashboard() {
             {families.length === 0 && (
               <div className="text-center py-12 bg-card rounded-2xl border space-y-3">
                 <p className="text-muted-foreground">
-                  You haven't committed to a family yet.
+                  Choose a family to start showing up for.
                 </p>
               </div>
             )}

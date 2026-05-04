@@ -66,8 +66,7 @@ export default function StartCircle() {
               We're here for you.
             </h1>
             <p className="text-muted-foreground leading-relaxed">
-              Tell us a little about yourself so your neighbors can find you and
-              form your support circle.
+              You don't have to do this alone. Tell us a little about yourself so the right neighbors can find you.
             </p>
           </div>
 
@@ -109,7 +108,7 @@ export default function StartCircle() {
             </div>
 
             <div className="space-y-2">
-              <Label>What kind of help do you need?</Label>
+              <Label>What kind of support would help most?</Label>
               <NeedsSelector
                 value={form.needs}
                 onChange={(needs) => setForm((f) => ({ ...f, needs }))}
@@ -125,7 +124,7 @@ export default function StartCircle() {
               </Label>
               <Textarea
                 id="hardest"
-                placeholder="Share as much or as little as you'd like…"
+                placeholder="e.g. Bedtime is the hardest. I'm doing it alone every night."
                 value={form.hardest_lately}
                 onChange={update("hardest_lately")}
                 rows={4}

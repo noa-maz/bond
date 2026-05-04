@@ -92,8 +92,7 @@ export default function JoinCircle() {
               Thank you for showing up.
             </h1>
             <p className="text-muted-foreground leading-relaxed">
-              A few details so we can match you with a nearby family who needs
-              your support.
+              A few details so the right family can find you.
             </p>
           </div>
 
