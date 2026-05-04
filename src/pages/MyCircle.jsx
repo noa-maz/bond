@@ -12,6 +12,7 @@ import CircleMember from "../components/CircleMember";
 export default function MyCircle() {
   const [family, setFamily] = useState(null);
   const [volunteers, setVolunteers] = useState([]);
+  const [visits, setVisits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
@@ -30,9 +31,13 @@ export default function MyCircle() {
       setFamily(fam);
 
       if (fam) {
-        const allVols = await base44.entities.Volunteer.list();
+        const [allVols, familyVisits] = await Promise.all([
+          base44.entities.Volunteer.list(),
+          base44.entities.Visit.filter({ family_id: fam.id }),
+        ]);
         const filteredVols = allVols.filter(v => v.committed_family_ids?.includes(fam.id));
         setVolunteers(filteredVols);
+        setVisits(familyVisits);
       }
     } finally {
       setLoading(false);
@@ -180,6 +185,42 @@ export default function MyCircle() {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Upcoming support */}
+          <div className="space-y-3">
+            <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">Upcoming support</h2>
+            {(() => {
+              const today = new Date().toISOString().split('T')[0];
+              const upcoming = visits
+                .filter(v => v.date >= today)
+                .sort((a, b) => a.date.localeCompare(b.date));
+              if (upcoming.length === 0) {
+                return (
+                  <p className="text-sm text-muted-foreground italic">
+                    No visits scheduled yet — your circle will let you know when they're coming.
+                  </p>
+                );
+              }
+              return (
+                <div className="space-y-2">
+                  {upcoming.map(v => (
+                    <div key={v.id} className="bg-card rounded-xl border p-4 flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold flex-shrink-0">
+                        {v.volunteer_name?.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{v.volunteer_name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(v.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} · {v.visit_type}
+                        </p>
+                        {v.note && <p className="text-xs text-muted-foreground mt-0.5 italic">"{v.note}"</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Pending approval */}

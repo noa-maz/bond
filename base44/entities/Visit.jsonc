@@ -1,0 +1,38 @@
+{
+  "name": "Visit",
+  "type": "object",
+  "properties": {
+    "family_id": {
+      "type": "string",
+      "title": "Family ID"
+    },
+    "volunteer_id": {
+      "type": "string",
+      "title": "Volunteer ID"
+    },
+    "volunteer_name": {
+      "type": "string",
+      "title": "Volunteer Name"
+    },
+    "date": {
+      "type": "string",
+      "title": "Date",
+      "format": "date"
+    },
+    "visit_type": {
+      "type": "string",
+      "title": "Visit Type"
+    },
+    "note": {
+      "type": "string",
+      "title": "Note"
+    }
+  },
+  "required": [
+    "family_id",
+    "volunteer_id",
+    "volunteer_name",
+    "date",
+    "visit_type"
+  ]
+}

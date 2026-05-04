@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays, Pencil } from "lucide-react";
+import ScheduleVisitForm from "../components/ScheduleVisitForm";
 
 const OFFERS = ["Childcare", "Cooking", "Transportation", "Just being there"];
 const FREQUENCIES = [
@@ -35,6 +36,7 @@ export default function VolunteerDashboard() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const [visits, setVisits] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -49,10 +51,12 @@ export default function VolunteerDashboard() {
     setVolunteer(vol);
 
     if (vol?.committed_family_ids?.length > 0) {
-      const familyResults = await Promise.all(
-        vol.committed_family_ids.map(id => base44.entities.Family.filter({ id }))
-      );
+      const [familyResults, allVisits] = await Promise.all([
+        Promise.all(vol.committed_family_ids.map(id => base44.entities.Family.filter({ id }))),
+        base44.entities.Visit.filter({ volunteer_id: vol.id }),
+      ]);
       setFamilies(familyResults.map(r => r[0]).filter(Boolean));
+      setVisits(allVisits);
     }
     setLoading(false);
   };
@@ -270,6 +274,31 @@ export default function VolunteerDashboard() {
                   <Heart className="w-4 h-4 fill-primary" />
                   You're committed to this family
                 </div>
+
+                {/* Scheduled visits for this family */}
+                {visits.filter(v => v.family_id === family.id).length > 0 && (
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Your upcoming visits</p>
+                    {visits
+                      .filter(v => v.family_id === family.id)
+                      .sort((a, b) => a.date.localeCompare(b.date))
+                      .map(v => (
+                        <div key={v.id} className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <CalendarDays className="w-3.5 h-3.5 flex-shrink-0" />
+                          <span>{new Date(v.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+                          <span>·</span>
+                          <span>{v.visit_type}</span>
+                        </div>
+                      ))}
+                  </div>
+                )}
+
+                <ScheduleVisitForm
+                  familyId={family.id}
+                  volunteer={volunteer}
+                  existingVisits={visits.filter(v => v.family_id === family.id)}
+                  onVisitAdded={v => setVisits(prev => [...prev, v])}
+                />
               </div>
             ))}
 
