@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -18,39 +18,23 @@ const fadeUp = {
 export default function Landing() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [checking, setChecking] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("bond_user_name");
-    if (stored) {
-      redirectReturningUser(stored);
-    } else {
-      setChecking(false);
-    }
-  }, []);
-
-  const redirectReturningUser = async (userName) => {
-    const families = await base44.entities.Family.filter({ user_email: userName });
-    if (families.length > 0) { navigate("/my-circle"); return; }
-    const volunteers = await base44.entities.Volunteer.filter({ user_email: userName });
-    if (volunteers.length > 0) { navigate("/volunteer-dashboard"); return; }
-    navigate("/choose-circle");
-  };
-
-  const handleEnter = () => {
+  const handleEnter = async () => {
     const trimmed = name.trim();
     if (!trimmed) return;
     localStorage.setItem("bond_user_name", trimmed);
-    navigate("/choose-circle");
+    setLoading(true);
+    try {
+      const families = await base44.entities.Family.filter({ user_email: trimmed });
+      if (families.length > 0) { navigate("/my-circle"); return; }
+      const volunteers = await base44.entities.Volunteer.filter({ user_email: trimmed });
+      if (volunteers.length > 0) { navigate("/volunteer-dashboard"); return; }
+      navigate("/choose-circle");
+    } finally {
+      setLoading(false);
+    }
   };
-
-  if (checking) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -89,16 +73,23 @@ export default function Landing() {
                 placeholder="e.g. Noa"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleEnter()}
+                onKeyDown={(e) => e.key === "Enter" && !loading && handleEnter()}
                 className="h-12 rounded-xl bg-card text-base"
+                disabled={loading}
               />
               <Button
                 onClick={handleEnter}
-                disabled={!name.trim()}
+                disabled={!name.trim() || loading}
                 className="h-12 px-5 rounded-xl gap-2 shrink-0"
               >
-                Enter BOND
-                <ArrowRight className="w-4 h-4" />
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    Enter BOND
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
               </Button>
             </div>
           </motion.div>
