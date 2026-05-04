@@ -27,27 +27,33 @@ export default function ChooseCircle() {
         </motion.div>
 
         <motion.div custom={1} variants={fadeUp} className="flex flex-col gap-4">
-          <Link to="/start-circle">
-            <Button
-              size="lg"
-              className="w-full h-14 px-8 text-base rounded-2xl gap-3 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
-            >
-              <Users className="w-5 h-5" />
-              I'm starting a circle
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
-          <Link to="/join-circle">
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full h-14 px-8 text-base rounded-2xl gap-3 border-2 hover:bg-secondary"
-            >
-              <Heart className="w-5 h-5" />
-              I'm joining a circle
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
+          <div className="space-y-1.5">
+            <Link to="/start-circle">
+              <Button
+                size="lg"
+                className="w-full h-14 px-8 text-base rounded-2xl gap-3 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
+              >
+                <Users className="w-5 h-5" />
+                I'm starting a circle
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+            <p className="text-xs text-muted-foreground text-center">My partner is away and I could use a steady hand nearby</p>
+          </div>
+          <div className="space-y-1.5">
+            <Link to="/join-circle">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full h-14 px-8 text-base rounded-2xl gap-3 border-2 hover:bg-secondary"
+              >
+                <Heart className="w-5 h-5" />
+                I'm joining a circle
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+            <p className="text-xs text-muted-foreground text-center">I want to show up for someone in my community</p>
+          </div>
         </motion.div>
       </motion.div>
     </div>
