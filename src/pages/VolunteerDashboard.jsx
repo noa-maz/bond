@@ -12,6 +12,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays, Pencil } from "lucide-react";
+
+const NEED_LABELS = {
+  school_pickup: "School / kindergarten pickup",
+  cooking: "Cooking / meal prep",
+  household: "Household tasks",
+  groceries: "Groceries",
+  someone_to_talk: "Someone to talk to",
+  other: "Other",
+};
+
+const getFamilyNeeds = (needs) => {
+  if (!needs || typeof needs !== "object") return [];
+  return Object.entries(needs)
+    .filter(([, v]) => v?.selected)
+    .map(([k]) => NEED_LABELS[k] || k);
+};
 import ScheduleVisitForm from "../components/ScheduleVisitForm";
 
 const OFFERS = ["Childcare", "Cooking", "Transportation", "Just being there"];
@@ -256,6 +272,16 @@ export default function VolunteerDashboard() {
                         {family.number_of_children === 1 ? "child" : "children"}
                       </span>
                     </div>
+                    {getFamilyNeeds(family.needs).length > 0 && (
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <span className="text-xs text-muted-foreground font-medium">What they need most:</span>
+                        {getFamilyNeeds(family.needs).map(need => (
+                          <span key={need} className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">
+                            {need}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
