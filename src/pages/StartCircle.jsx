@@ -41,7 +41,7 @@ export default function StartCircle() {
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="flex items-center gap-4 px-6 md:px-12 py-5">
-        <Link to="/">
+        <Link to="/choose-circle">
           <Button variant="ghost" size="icon" className="rounded-full">
             <ArrowLeft className="w-5 h-5" />
           </Button>
