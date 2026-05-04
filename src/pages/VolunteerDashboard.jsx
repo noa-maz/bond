@@ -14,7 +14,7 @@ const OFFER_EMOJI = {
 
 export default function VolunteerDashboard() {
   const [volunteer, setVolunteer] = useState(null);
-  const [family, setFamily] = useState(null);
+  const [families, setFamilies] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,10 +30,10 @@ export default function VolunteerDashboard() {
     setVolunteer(vol);
 
     if (vol?.committed_family_ids?.length > 0) {
-      const fam = await base44.entities.Family.filter({
-        id: vol.committed_family_ids[0],
-      });
-      setFamily(fam[0] || null);
+      const familyResults = await Promise.all(
+        vol.committed_family_ids.map(id => base44.entities.Family.filter({ id }))
+      );
+      setFamilies(familyResults.map(r => r[0]).filter(Boolean));
     }
     setLoading(false);
   };
@@ -105,13 +105,22 @@ export default function VolunteerDashboard() {
             </div>
           </div>
 
-          {/* Family card */}
-          {family ? (
-            <div className="space-y-3">
-              <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
-                Your family
-              </h2>
-              <div className="bg-card rounded-2xl border p-6 space-y-4">
+          {/* Family cards */}
+          <div className="space-y-3">
+            <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+              {families.length === 1 ? "Your family" : "Your families"}
+            </h2>
+
+            {families.length === 0 && (
+              <div className="text-center py-12 bg-card rounded-2xl border space-y-3">
+                <p className="text-muted-foreground">
+                  You haven't committed to a family yet.
+                </p>
+              </div>
+            )}
+
+            {families.map((family) => (
+              <div key={family.id} className="bg-card rounded-2xl border p-6 space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-serif text-2xl flex-shrink-0">
                     {family.name?.charAt(0).toUpperCase()}
@@ -128,9 +137,7 @@ export default function VolunteerDashboard() {
                       <span className="inline-flex items-center gap-1">
                         <Baby className="w-3.5 h-3.5" />
                         {family.number_of_children}{" "}
-                        {family.number_of_children === 1
-                          ? "child"
-                          : "children"}
+                        {family.number_of_children === 1 ? "child" : "children"}
                       </span>
                     </div>
                   </div>
@@ -149,24 +156,15 @@ export default function VolunteerDashboard() {
                   You're committed to this family
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
-                Your family
-              </h2>
-              <div className="text-center py-12 bg-card rounded-2xl border space-y-3">
-                <p className="text-muted-foreground">
-                  You haven't committed to a family yet.
-                </p>
-                <Link to="/browse-families">
-                  <Button variant="outline" className="rounded-xl">
-                    Browse families
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          )}
+            ))}
+
+            <Link to="/browse-families">
+              <Button variant="outline" className="w-full rounded-2xl h-12 gap-2">
+                <Heart className="w-4 h-4" />
+                Support another family
+              </Button>
+            </Link>
+          </div>
         </motion.div>
       </main>
     </div>
