@@ -2,7 +2,24 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays, Pencil } from "lucide-react";
+
+const OFFERS = ["Childcare", "Cooking", "Transportation", "Just being there"];
+const FREQUENCIES = [
+  "Once a week",
+  "Twice a month",
+  "Once a month",
+  "Flexible - I'll coordinate with my circle",
+];
 import { motion } from "framer-motion";
 
 const OFFER_EMOJI = {
@@ -16,6 +33,8 @@ export default function VolunteerDashboard() {
   const [volunteer, setVolunteer] = useState(null);
   const [families, setFamilies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState({});
 
   useEffect(() => {
     loadData();
@@ -79,12 +98,108 @@ export default function VolunteerDashboard() {
         >
           {/* Volunteer info */}
           <div className="space-y-2">
-            <h1 className="font-serif text-3xl tracking-tight">
-              Hi, {volunteer.name} 👋
-            </h1>
-            <p className="text-muted-foreground">
-              Thank you for being part of someone's circle.
-            </p>
+            {!editing ? (
+              <>
+                <div className="flex items-center gap-3">
+                  <h1 className="font-serif text-3xl tracking-tight flex-1">
+                    Hi, {volunteer.name} 👋
+                  </h1>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full"
+                    onClick={() => {
+                      setEditForm({
+                        name: volunteer.name,
+                        neighborhood: volunteer.neighborhood,
+                        offer_types: volunteer.offer_types || [],
+                        frequency: volunteer.frequency || '',
+                      });
+                      setEditing(true);
+                    }}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                </div>
+                <p className="text-muted-foreground">
+                  Thank you for being part of someone's circle.
+                </p>
+              </>
+            ) : (
+              <div className="bg-card rounded-2xl border p-5 space-y-4">
+                <div className="space-y-2">
+                  <Label>Your first name</Label>
+                  <Input
+                    value={editForm.name}
+                    onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
+                    className="h-11 rounded-xl bg-background"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Neighborhood</Label>
+                  <Input
+                    value={editForm.neighborhood}
+                    onChange={e => setEditForm(f => ({ ...f, neighborhood: e.target.value }))}
+                    className="h-11 rounded-xl bg-background"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>What can you offer?</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {OFFERS.map(o => (
+                      <button
+                        key={o}
+                        type="button"
+                        onClick={() => setEditForm(f => ({
+                          ...f,
+                          offer_types: f.offer_types.includes(o)
+                            ? f.offer_types.filter(x => x !== o)
+                            : [...f.offer_types, o],
+                        }))}
+                        className={`h-11 px-4 rounded-xl border text-sm font-medium text-left transition-colors ${
+                          editForm.offer_types?.includes(o)
+                            ? 'bg-primary text-primary-foreground border-primary'
+                            : 'bg-background border-border hover:bg-secondary'
+                        }`}
+                      >
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>How often can you show up?</Label>
+                  <Select
+                    value={editForm.frequency}
+                    onValueChange={val => setEditForm(f => ({ ...f, frequency: val }))}
+                  >
+                    <SelectTrigger className="h-11 rounded-xl bg-background">
+                      <SelectValue placeholder="Choose one…" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {FREQUENCIES.map(freq => (
+                        <SelectItem key={freq} value={freq}>{freq}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex gap-2 pt-1">
+                  <Button
+                    className="flex-1"
+                    onClick={async () => {
+                      await base44.entities.Volunteer.update(volunteer.id, editForm);
+                      setVolunteer(v => ({ ...v, ...editForm }));
+                      setEditing(false);
+                    }}
+                  >
+                    Save
+                  </Button>
+                  <Button variant="ghost" className="flex-1" onClick={() => setEditing(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Your commitment card */}

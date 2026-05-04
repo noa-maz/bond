@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Heart, Loader2, Users } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Heart, Loader2, Users, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import CircleMember from "../components/CircleMember";
 
@@ -10,6 +13,8 @@ export default function MyCircle() {
   const [family, setFamily] = useState(null);
   const [volunteers, setVolunteers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState({});
 
   useEffect(() => {
     loadData();
@@ -25,10 +30,9 @@ export default function MyCircle() {
       setFamily(fam);
 
       if (fam) {
-        const allVols = await base44.entities.Volunteer.filter({
-          committed_family_id: fam.id,
-        });
-        setVolunteers(allVols);
+        const allVols = await base44.entities.Volunteer.list();
+        const filteredVols = allVols.filter(v => v.committed_family_ids?.includes(fam.id));
+        setVolunteers(filteredVols);
       }
     } finally {
       setLoading(false);
@@ -83,25 +87,97 @@ export default function MyCircle() {
         >
           {/* Profile summary */}
           <div className="bg-card rounded-2xl border p-6 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-serif text-2xl">
-                {family.name?.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <h1 className="font-serif text-2xl tracking-tight">
-                  {family.name}'s Circle
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {family.neighborhood} · {family.number_of_children}{" "}
-                  {family.number_of_children === 1 ? "child" : "children"}
-                </p>
-              </div>
-            </div>
-            {family.hardest_lately && (
-              <div className="bg-secondary/50 rounded-xl px-4 py-3">
-                <p className="text-sm text-muted-foreground italic">
-                  "{family.hardest_lately}"
-                </p>
+            {!editing ? (
+              <>
+                <div className="flex items-center gap-3">
+                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-serif text-2xl flex-shrink-0">
+                    {family.name?.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1">
+                    <h1 className="font-serif text-2xl tracking-tight">
+                      {family.name}'s Circle
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      {family.neighborhood} · {family.number_of_children}{" "}
+                      {family.number_of_children === 1 ? "child" : "children"}
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full self-start"
+                    onClick={() => {
+                      setEditForm({
+                        name: family.name,
+                        neighborhood: family.neighborhood,
+                        number_of_children: family.number_of_children,
+                        hardest_lately: family.hardest_lately || '',
+                      });
+                      setEditing(true);
+                    }}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                </div>
+                {family.hardest_lately && (
+                  <div className="bg-secondary/50 rounded-xl px-4 py-3">
+                    <p className="text-sm text-muted-foreground italic">
+                      "{family.hardest_lately}"
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Name</Label>
+                  <Input
+                    value={editForm.name}
+                    onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
+                    className="h-11 rounded-xl bg-background"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Neighborhood</Label>
+                  <Input
+                    value={editForm.neighborhood}
+                    onChange={e => setEditForm(f => ({ ...f, neighborhood: e.target.value }))}
+                    className="h-11 rounded-xl bg-background"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Number of children</Label>
+                  <Input
+                    type="number"
+                    value={editForm.number_of_children}
+                    onChange={e => setEditForm(f => ({ ...f, number_of_children: Number(e.target.value) }))}
+                    className="h-11 rounded-xl bg-background"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>What's been hardest lately?</Label>
+                  <Textarea
+                    value={editForm.hardest_lately}
+                    onChange={e => setEditForm(f => ({ ...f, hardest_lately: e.target.value }))}
+                    className="rounded-xl bg-background"
+                    rows={3}
+                  />
+                </div>
+                <div className="flex gap-2 pt-1">
+                  <Button
+                    className="flex-1"
+                    onClick={async () => {
+                      await base44.entities.Family.update(family.id, editForm);
+                      setFamily(f => ({ ...f, ...editForm }));
+                      setEditing(false);
+                    }}
+                  >
+                    Save
+                  </Button>
+                  <Button variant="ghost" className="flex-1" onClick={() => setEditing(false)}>
+                    Cancel
+                  </Button>
+                </div>
               </div>
             )}
           </div>
