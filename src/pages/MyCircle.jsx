@@ -115,6 +115,7 @@ export default function MyCircle() {
                       setEditForm({
                         name: family.name,
                         neighborhood: family.neighborhood,
+                        phone: family.phone || '',
                         number_of_children: family.number_of_children,
                         hardest_lately: family.hardest_lately || '',
                       });
@@ -147,6 +148,15 @@ export default function MyCircle() {
                   <Input
                     value={editForm.neighborhood}
                     onChange={e => setEditForm(f => ({ ...f, neighborhood: e.target.value }))}
+                    className="h-11 rounded-xl bg-background"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Phone number <span className="text-muted-foreground font-normal">(optional)</span></Label>
+                  <Input
+                    type="tel"
+                    value={editForm.phone}
+                    onChange={e => setEditForm(f => ({ ...f, phone: e.target.value }))}
                     className="h-11 rounded-xl bg-background"
                   />
                 </div>
