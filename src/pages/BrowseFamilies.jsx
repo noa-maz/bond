@@ -18,8 +18,8 @@ export default function BrowseFamilies() {
   }, []);
 
   const loadData = async () => {
-    const user = await base44.auth.me();
-    const vols = await base44.entities.Volunteer.filter({ user_email: user.email });
+    const userName = localStorage.getItem("bond_user_name");
+    const vols = await base44.entities.Volunteer.filter({ user_email: userName });
     const vol = vols[0];
     setVolunteer(vol);
 

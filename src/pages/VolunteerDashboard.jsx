@@ -22,9 +22,9 @@ export default function VolunteerDashboard() {
   }, []);
 
   const loadData = async () => {
-    const user = await base44.auth.me();
+    const userName = localStorage.getItem("bond_user_name");
     const vols = await base44.entities.Volunteer.filter({
-      user_email: user.email,
+      user_email: userName,
     });
     const vol = vols[0];
     setVolunteer(vol);

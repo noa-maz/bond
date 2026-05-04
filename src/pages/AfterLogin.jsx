@@ -11,19 +11,14 @@ export default function AfterLogin() {
   }, []);
 
   const redirect = async () => {
-    const user = await base44.auth.me();
+    const userName = localStorage.getItem("bond_user_name");
+    if (!userName) { navigate("/"); return; }
 
-    const families = await base44.entities.Family.filter({ user_email: user.email });
-    if (families.length > 0) {
-      navigate("/my-circle");
-      return;
-    }
+    const families = await base44.entities.Family.filter({ user_email: userName });
+    if (families.length > 0) { navigate("/my-circle"); return; }
 
-    const volunteers = await base44.entities.Volunteer.filter({ user_email: user.email });
-    if (volunteers.length > 0) {
-      navigate("/volunteer-dashboard");
-      return;
-    }
+    const volunteers = await base44.entities.Volunteer.filter({ user_email: userName });
+    if (volunteers.length > 0) { navigate("/volunteer-dashboard"); return; }
 
     navigate("/choose-circle");
   };

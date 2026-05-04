@@ -29,11 +29,11 @@ export default function StartCircle() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const user = await base44.auth.me();
+    const userName = localStorage.getItem("bond_user_name") || form.name;
     await base44.entities.Family.create({
       ...form,
       number_of_children: Number(form.number_of_children),
-      user_email: user.email,
+      user_email: userName,
     });
     navigate("/my-circle");
   };

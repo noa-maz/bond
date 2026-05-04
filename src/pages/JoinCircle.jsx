@@ -51,13 +51,13 @@ export default function JoinCircle() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const user = await base44.auth.me();
+    const userName = localStorage.getItem("bond_user_name") || form.name;
     await base44.entities.Volunteer.create({
       name: form.name,
       neighborhood: form.neighborhood,
       offer_types: form.offer_types,
       frequency: form.frequency,
-      user_email: user.email,
+      user_email: userName,
     });
     navigate("/browse-families");
   };
