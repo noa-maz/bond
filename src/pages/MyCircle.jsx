@@ -204,20 +204,28 @@ export default function MyCircle() {
               }
               return (
                 <div className="space-y-2">
-                  {upcoming.map(v => (
-                    <div key={v.id} className="bg-card rounded-xl border p-4 flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold flex-shrink-0">
-                        {v.volunteer_name?.charAt(0).toUpperCase()}
+                  {upcoming.map(v => {
+                    const isApproved = volunteers.some(vol => vol.id === v.volunteer_id && vol.approved);
+                    return (
+                      <div key={v.id} className={`bg-card rounded-xl border p-4 flex items-start gap-3 ${!isApproved ? 'opacity-60' : ''}`}>
+                        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold flex-shrink-0">
+                          {v.volunteer_name?.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm">{v.volunteer_name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(v.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} · {v.visit_type}
+                          </p>
+                          {!isApproved && (
+                            <span className="inline-block mt-1 px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs">
+                              Pending — will be confirmed once they join your circle.
+                            </span>
+                          )}
+                          {v.note && <p className="text-xs text-muted-foreground mt-0.5 italic">"{v.note}"</p>}
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-sm">{v.volunteer_name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(v.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} · {v.visit_type}
-                        </p>
-                        {v.note && <p className="text-xs text-muted-foreground mt-0.5 italic">"{v.note}"</p>}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               );
             })()}
