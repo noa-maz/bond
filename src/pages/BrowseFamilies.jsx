@@ -60,11 +60,14 @@ export default function BrowseFamilies() {
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="flex items-center gap-4 px-6 md:px-12 py-5">
-        <Link to="/join-circle">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-        </Link>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={() => navigate(volunteer?.committed_family_ids?.length > 0 ? "/volunteer-dashboard" : "/join-circle")}
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </Button>
         <span className="font-serif text-xl tracking-tight">BOND</span>
       </nav>
 
