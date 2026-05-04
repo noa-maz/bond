@@ -10,6 +10,10 @@
       "type": "string",
       "title": "Neighborhood"
     },
+    "phone": {
+      "type": "string",
+      "title": "Phone Number"
+    },
     "number_of_children": {
       "type": "number",
       "title": "Number of Children"

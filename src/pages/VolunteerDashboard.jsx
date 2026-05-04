@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays, Pencil } from "lucide-react";
+import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays, Pencil, Phone } from "lucide-react";
 
 const NEED_LABELS = {
   school_pickup: "School / kindergarten pickup",
@@ -272,6 +272,15 @@ export default function VolunteerDashboard() {
                         {family.number_of_children === 1 ? "child" : "children"}
                       </span>
                     </div>
+                    {family.phone && (
+                      <a
+                        href={`tel:${family.phone}`}
+                        className="inline-flex items-center gap-1 mt-1 text-sm text-primary hover:underline"
+                      >
+                        <Phone className="w-3.5 h-3.5" />
+                        {family.phone}
+                      </a>
+                    )}
                     {getFamilyNeeds(family.needs).length > 0 && (
                       <div className="mt-2 flex flex-wrap items-center gap-2">
                         <span className="text-xs text-muted-foreground font-medium">What they need most:</span>

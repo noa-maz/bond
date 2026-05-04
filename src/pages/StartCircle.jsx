@@ -15,6 +15,7 @@ export default function StartCircle() {
   const [form, setForm] = useState({
     name: "",
     neighborhood: "",
+    phone: "",
     number_of_children: "",
     needs: {},
     hardest_lately: "",
@@ -92,6 +93,19 @@ export default function StartCircle() {
                 onChange={update("neighborhood")}
                 className="h-12 rounded-xl bg-card"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone number <span className="text-muted-foreground font-normal">(optional)</span></Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="e.g. 050-1234567"
+                value={form.phone}
+                onChange={update("phone")}
+                className="h-12 rounded-xl bg-card"
+              />
+              <p className="text-xs text-muted-foreground">So your circle can reach you directly.</p>
             </div>
 
             <div className="space-y-2">
