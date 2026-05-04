@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Heart, MapPin, Baby } from "lucide-react";
 
-export default function FamilyCard({ family, onCommit, isCommitting, alreadyCommitted, volunteerCount }) {
+export default function FamilyCard({ family, onCommit, isCommitting, alreadyCommitted }) {
   const initials = family.name
     ? family.name.charAt(0).toUpperCase()
     : "?";
@@ -24,13 +24,6 @@ export default function FamilyCard({ family, onCommit, isCommitting, alreadyComm
               {family.number_of_children} {family.number_of_children === 1 ? "child" : "children"}
             </span>
           </div>
-        </div>
-        <div className="mt-2">
-          {volunteerCount === 0 ? (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">Waiting for support</span>
-          ) : (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{volunteerCount} neighbor{volunteerCount > 1 ? 's' : ''} committed</span>
-          )}
         </div>
       </div>
 
