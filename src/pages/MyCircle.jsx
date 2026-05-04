@@ -29,6 +29,7 @@ export default function MyCircle() {
       });
       setVolunteers(allVols);
     }
+    setLoading(false);
   };
 
   const handleApprove = async (volunteerId) => {
