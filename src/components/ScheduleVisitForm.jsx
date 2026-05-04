@@ -21,7 +21,7 @@ export default function ScheduleVisitForm({ familyId, volunteer, existingVisits 
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const conflict = date && existingVisits.some(v => v.date === date);
+  const conflict = date && existingVisits.some(v => v.date === date && v.volunteer_id !== volunteer.id);
   const canSubmit = date && visitType;
 
   const handleSubmit = async (e) => {
@@ -69,7 +69,7 @@ export default function ScheduleVisitForm({ familyId, volunteer, existingVisits 
         {conflict && (
           <div className="flex items-center gap-1.5 text-xs text-amber-600 mt-1">
             <AlertTriangle className="w-3.5 h-3.5" />
-            Another visit is already scheduled on this date.
+            Someone is already visiting that day — you can still join or pick another date.
           </div>
         )}
       </div>

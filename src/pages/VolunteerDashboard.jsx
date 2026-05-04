@@ -51,12 +51,13 @@ export default function VolunteerDashboard() {
     setVolunteer(vol);
 
     if (vol?.committed_family_ids?.length > 0) {
-      const [familyResults, allVisits] = await Promise.all([
-        Promise.all(vol.committed_family_ids.map(id => base44.entities.Family.filter({ id }))),
-        base44.entities.Visit.filter({ volunteer_id: vol.id }),
+      const familyIds = vol.committed_family_ids;
+      const [familyResults, ...familyVisitArrays] = await Promise.all([
+        Promise.all(familyIds.map(id => base44.entities.Family.filter({ id }))),
+        ...familyIds.map(id => base44.entities.Visit.filter({ family_id: id })),
       ]);
       setFamilies(familyResults.map(r => r[0]).filter(Boolean));
-      setVisits(allVisits);
+      setVisits(familyVisitArrays.flat());
     }
     setLoading(false);
   };
