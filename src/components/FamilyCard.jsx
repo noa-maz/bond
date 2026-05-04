@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Heart, MapPin, Baby } from "lucide-react";
 
-export default function FamilyCard({ family, onCommit, isCommitting }) {
+export default function FamilyCard({ family, onCommit, isCommitting, alreadyCommitted }) {
   const initials = family.name
     ? family.name.charAt(0).toUpperCase()
     : "?";
@@ -37,11 +37,11 @@ export default function FamilyCard({ family, onCommit, isCommitting }) {
 
       <Button
         onClick={() => onCommit(family.id)}
-        disabled={isCommitting}
+        disabled={isCommitting || alreadyCommitted}
         className="w-full rounded-xl h-11 gap-2"
       >
         <Heart className="w-4 h-4" />
-        Commit to this family
+        {alreadyCommitted ? "Already in your circle" : "Commit to this family"}
       </Button>
     </div>
   );

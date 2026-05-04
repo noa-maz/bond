@@ -23,10 +23,6 @@ export default function BrowseFamilies() {
     const vol = vols[0];
     setVolunteer(vol);
 
-    if (vol?.committed_family_ids?.length > 0) {
-      navigate("/volunteer-dashboard");
-      return;
-    }
 
     const allFamilies = await base44.entities.Family.list();
     // Show families in the same neighborhood first
@@ -110,6 +106,7 @@ export default function BrowseFamilies() {
                   family={family}
                   onCommit={handleCommit}
                   isCommitting={committing === family.id}
+                  alreadyCommitted={volunteer?.committed_family_ids?.includes(family.id)}
                 />
               ))}
             </div>
