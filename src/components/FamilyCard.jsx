@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Heart, MapPin, Baby } from "lucide-react";
 
+const NEED_LABELS = {
+  school_pickup: "Childcare",
+  cooking: "Cooking",
+  groceries: "Transportation",
+  someone_to_talk: "Just being there",
+};
+
 export default function FamilyCard({ family, onCommit, isCommitting, alreadyCommitted, volunteerCount = 0 }) {
   const initials = family.name
     ? family.name.charAt(0).toUpperCase()
@@ -24,6 +31,19 @@ export default function FamilyCard({ family, onCommit, isCommitting, alreadyComm
               {family.number_of_children} {family.number_of_children === 1 ? "child" : "children"}
             </span>
           </div>
+          {(() => {
+            const tags = Object.entries(family.needs || {})
+              .filter(([, v]) => v?.selected)
+              .map(([k]) => NEED_LABELS[k])
+              .filter(Boolean);
+            return tags.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {tags.map(tag => (
+                  <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">{tag}</span>
+                ))}
+              </div>
+            ) : null;
+          })()}
         </div>
         <div className="mt-2">
           {volunteerCount === 0 ? (
