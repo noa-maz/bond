@@ -29,9 +29,9 @@ export default function VolunteerDashboard() {
     const vol = vols[0];
     setVolunteer(vol);
 
-    if (vol?.committed_family_id) {
+    if (vol?.committed_family_ids?.length > 0) {
       const fam = await base44.entities.Family.filter({
-        id: vol.committed_family_id,
+        id: vol.committed_family_ids[0],
       });
       setFamily(fam[0] || null);
     }

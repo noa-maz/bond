@@ -33,9 +33,12 @@
         "Flexible - I'll coordinate with my circle"
       ]
     },
-    "committed_family_id": {
-      "type": "string",
-      "title": "Committed Family ID"
+    "committed_family_ids": {
+      "type": "array",
+      "title": "Committed Family IDs",
+      "items": {
+        "type": "string"
+      }
     },
     "approved": {
       "type": "boolean",

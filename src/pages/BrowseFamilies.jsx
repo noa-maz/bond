@@ -23,7 +23,7 @@ export default function BrowseFamilies() {
     const vol = vols[0];
     setVolunteer(vol);
 
-    if (vol?.committed_family_id) {
+    if (vol?.committed_family_ids?.length > 0) {
       navigate("/volunteer-dashboard");
       return;
     }
@@ -44,9 +44,13 @@ export default function BrowseFamilies() {
   const handleCommit = async (familyId) => {
     setCommitting(familyId);
     await base44.entities.Volunteer.update(volunteer.id, {
-      committed_family_id: familyId,
+      committed_family_ids: [...(volunteer.committed_family_ids || []), familyId],
     });
-    navigate("/volunteer-dashboard");
+    setVolunteer((prev) => ({
+      ...prev,
+      committed_family_ids: [...(prev.committed_family_ids || []), familyId],
+    }));
+    setCommitting(null);
   };
 
   if (loading) {
