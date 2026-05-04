@@ -40,7 +40,6 @@ export default function MyCircle() {
     setVolunteers((prev) =>
       prev.map((v) => (v.id === volunteerId ? { ...v, approved: true } : v))
     );
-    setLoading(false);
   };
 
   if (loading) {
