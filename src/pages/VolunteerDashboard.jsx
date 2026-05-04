@@ -269,7 +269,7 @@ export default function VolunteerDashboard() {
 
                 <div className="flex items-center gap-2 text-primary text-sm font-medium pt-1">
                   <Heart className="w-4 h-4 fill-primary" />
-                  You're committed to this family
+                  You chose them. That means everything.
                 </div>
 
                 {/* Scheduled visits for this family */}

@@ -48,7 +48,7 @@ export default function FamilyCard({ family, onCommit, isCommitting, alreadyComm
         className="w-full rounded-xl h-11 gap-2"
       >
         <Heart className="w-4 h-4" />
-        {alreadyCommitted ? "Already in your circle" : "Commit to this family"}
+        {alreadyCommitted ? "Already in your circle" : "Join their circle"}
       </Button>
     </div>
   );

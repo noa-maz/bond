@@ -83,7 +83,7 @@ export default function Landing() {
                 className="h-12 px-5 rounded-xl gap-2 shrink-0"
               >
                 {loading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-sm">Looking for you…</span>
                 ) : (
                   <>
                     Enter BOND

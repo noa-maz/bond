@@ -16,6 +16,7 @@ const VISIT_TYPES = [
 
 export default function ScheduleVisitForm({ familyId, volunteer, existingVisits = [], onVisitAdded }) {
   const [open, setOpen] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
   const [date, setDate] = useState("");
   const [visitType, setVisitType] = useState("");
   const [note, setNote] = useState("");
@@ -39,9 +40,17 @@ export default function ScheduleVisitForm({ familyId, volunteer, existingVisits 
     setDate("");
     setVisitType("");
     setNote("");
-    setOpen(false);
     setLoading(false);
+    setOpen(false);
+    setConfirmed(true);
+    setTimeout(() => setConfirmed(false), 3000);
   };
+
+  if (confirmed) {
+    return (
+      <p className="text-sm text-primary font-medium mt-2">You're in. ❤️ They'll be glad you're coming.</p>
+    );
+  }
 
   if (!open) {
     return (
