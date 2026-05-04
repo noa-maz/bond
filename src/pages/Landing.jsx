@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { Heart, Users, ArrowRight } from "lucide-react";
+import { base44 } from "@/api/base44Client";
+import { Heart, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
@@ -17,18 +17,7 @@ export default function Landing() {
     <div className="min-h-screen flex flex-col">
       {/* Nav */}
       <nav className="flex items-center justify-end px-6 md:px-12 py-5">
-        <div className="flex gap-3">
-          <Link to="/start-circle">
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              Start a circle
-            </Button>
-          </Link>
-          <Link to="/join-circle">
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              Join a circle
-            </Button>
-          </Link>
-        </div>
+        <span className="font-serif text-xl tracking-tight">BOND</span>
       </nav>
 
       {/* Hero */}
@@ -64,27 +53,23 @@ export default function Landing() {
             variants={fadeUp}
             className="flex flex-col sm:flex-row gap-4 justify-center pt-2"
           >
-            <Link to="/start-circle" className="flex-1 sm:flex-initial">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto h-14 px-8 text-base rounded-2xl gap-3 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
-              >
-                <Users className="w-5 h-5" />
-                I'm starting a circle
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-            <Link to="/join-circle" className="flex-1 sm:flex-initial">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto h-14 px-8 text-base rounded-2xl gap-3 border-2 hover:bg-secondary"
-              >
-                <Heart className="w-5 h-5" />
-                I'm joining a circle
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              onClick={() => base44.auth.redirectToLogin("/choose-circle")}
+              className="w-full sm:w-auto h-14 px-8 text-base rounded-2xl gap-3 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
+            >
+              <Users className="w-5 h-5" />
+              I'm new here
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => base44.auth.redirectToLogin("/after-login")}
+              className="w-full sm:w-auto h-14 px-8 text-base rounded-2xl gap-3 border-2 hover:bg-secondary"
+            >
+              <Heart className="w-5 h-5" />
+              Welcome back
+            </Button>
           </motion.div>
         </motion.div>
 

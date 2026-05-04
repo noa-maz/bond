@@ -11,6 +11,8 @@ import JoinCircle from './pages/JoinCircle';
 import BrowseFamilies from './pages/BrowseFamilies';
 import MyCircle from './pages/MyCircle';
 import VolunteerDashboard from './pages/VolunteerDashboard';
+import ChooseCircle from './pages/ChooseCircle';
+import AfterLogin from './pages/AfterLogin';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -44,6 +46,8 @@ const AuthenticatedApp = () => {
       <Route path="/browse-families" element={<BrowseFamilies />} />
       <Route path="/my-circle" element={<MyCircle />} />
       <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
+      <Route path="/choose-circle" element={<ChooseCircle />} />
+      <Route path="/after-login" element={<AfterLogin />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
