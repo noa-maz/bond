@@ -33,14 +33,16 @@ export default function FamilyCard({ family, onCommit, isCommitting, alreadyComm
             </span>
           </div>
           {(() => {
-            const tags = Object.entries(family.needs || {})
-              .filter(([, v]) => v?.selected)
-              .map(([k]) => NEED_LABELS[k])
-              .filter(Boolean);
-            return tags.length > 0 ? (
+            const items = Object.entries(family.needs || {})
+              .filter(([k, v]) => v?.selected && NEED_LABELS[k])
+              .map(([k, v]) => ({ key: k, label: NEED_LABELS[k], note: v?.text || '' }));
+            return items.length > 0 ? (
               <div className="flex flex-wrap gap-1.5 mt-2">
-                {tags.map(tag => (
-                  <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">{tag}</span>
+                {items.map(({ key, label, note }) => (
+                  <div key={key} className="flex flex-col gap-0.5">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">{label}</span>
+                    {note && <span className="text-xs text-muted-foreground italic px-1">{note}</span>}
+                  </div>
                 ))}
               </div>
             ) : null;

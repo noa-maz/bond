@@ -94,6 +94,21 @@ export default function NeedsSelector({ value = {}, onChange }) {
               )}
             </button>
 
+            {/* Inline note input when selected */}
+            {isSelected && (
+              <div className="px-4 pb-2">
+                <input
+                  type="text"
+                  maxLength={120}
+                  placeholder="anything specific? (optional)"
+                  value={state.text || ""}
+                  onChange={(e) => setText(need.key, e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-full bg-transparent border-0 border-b border-muted-foreground/20 focus:border-muted-foreground/50 outline-none text-xs text-muted-foreground placeholder:text-muted-foreground/50 py-1 transition-colors"
+                />
+              </div>
+            )}
+
             {/* Days summary when collapsed */}
             {isSelected && !isOpen && state.days.length > 0 && (
               <div className="px-4 pb-3 flex flex-wrap gap-1">
