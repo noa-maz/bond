@@ -26,7 +26,7 @@ const getFamilyNeeds = (needs) => {
   if (!needs || typeof needs !== "object") return [];
   return Object.entries(needs)
     .filter(([, v]) => v?.selected)
-    .map(([k, v]) => ({ label: NEED_LABELS[k] || k, note: v?.text || '' }));
+    .map(([k, v]) => ({ label: NEED_LABELS[k] || k, note: v?.text || '', days: v?.days || [] }));
 };
 
 const formatLastUpdated = (dateStr) => {
@@ -301,9 +301,14 @@ export default function VolunteerDashboard() {
                   <div className="bg-secondary/40 rounded-xl px-4 py-3 space-y-2">
                     <span className="text-xs text-muted-foreground font-medium">What they need most:</span>
                     <div className="flex flex-wrap gap-2">
-                      {needs.map(({ label, note }) => (
+                      {needs.map(({ label, note, days }) => (
                         <div key={label} className="flex flex-col gap-0.5">
-                          <span className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">{label}</span>
+                          <div className="flex flex-wrap items-center gap-1">
+                            <span className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">{label}</span>
+                            {days.map(day => (
+                              <span key={day} className="text-xs px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground font-normal">{day}</span>
+                            ))}
+                          </div>
                           {note && <span className="text-xs text-muted-foreground italic px-1">{note}</span>}
                         </div>
                       ))}
