@@ -16,6 +16,7 @@ Deno.serve(async (req) => {
 
     const families = await base44.asServiceRole.entities.Family.list();
     const visits = await base44.asServiceRole.entities.Visit.list();
+    const users = await base44.asServiceRole.entities.User.list();
 
     // Filter visits from the past week (completed = date is in the past)
     const recentVisits = visits.filter(v => v.date >= weekAgoStr && v.date < todayStr);
@@ -23,7 +24,8 @@ Deno.serve(async (req) => {
     let emailsSent = 0;
 
     for (const family of families) {
-      if (!family.user_email) continue;
+      const familyUser = users.find(u => u.email === family.user_email);
+      if (!familyUser?.email) continue;
 
       const familyVisits = recentVisits.filter(v => v.family_id === family.id);
       if (familyVisits.length === 0) continue;
