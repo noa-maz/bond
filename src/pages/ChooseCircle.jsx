@@ -33,6 +33,7 @@ export default function ChooseCircle() {
           <motion.div custom={0} variants={fadeUp} className="space-y-2">
             <h1 className="font-serif text-4xl tracking-tight">Welcome to BOND</h1>
             <p className="text-muted-foreground">What brings you here?</p>
+            <p className="text-sm text-muted-foreground text-center">BOND connects families managing reserve duty with neighbors who commit to showing up - not once, but over time.</p>
           </motion.div>
 
           <motion.div custom={1} variants={fadeUp} className="flex flex-col gap-4">
