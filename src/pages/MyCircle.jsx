@@ -17,6 +17,7 @@ export default function MyCircle() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const [showPauseOverlay, setShowPauseOverlay] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -85,6 +86,21 @@ export default function MyCircle() {
       </nav>
 
       <main className="flex-1 px-6 md:px-12 py-8 max-w-2xl mx-auto w-full">
+        {/* Paused banner */}
+        {family?.paused && (
+          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 flex items-center justify-between gap-4">
+            <p className="text-sm text-amber-800">Your circle is paused. Resume anytime.</p>
+            <button
+              onClick={async () => {
+                await base44.entities.Family.update(family.id, { paused: false, pause_reason: '' });
+                setFamily(f => ({ ...f, paused: false, pause_reason: '' }));
+              }}
+              className="text-sm font-medium text-amber-700 underline underline-offset-2 hover:text-amber-900 whitespace-nowrap"
+            >
+              Resume my circle
+            </button>
+          </div>
+        )}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -316,8 +332,54 @@ export default function MyCircle() {
               </div>
             )}
           </div>
+          {/* Pause button */}
+          {!family?.paused && (
+            <div className="pt-4 flex justify-center">
+              <button
+                onClick={() => setShowPauseOverlay(true)}
+                className="text-xs text-muted-foreground/60 hover:text-muted-foreground underline underline-offset-2 transition-colors"
+              >
+                Pause my circle
+              </button>
+            </div>
+          )}
         </motion.div>
       </main>
+
+      {/* Pause overlay */}
+      {showPauseOverlay && (
+        <div className="fixed inset-0 bg-black/30 flex items-end sm:items-center justify-center z-50 px-4 pb-8 sm:pb-0">
+          <div className="bg-background rounded-2xl border p-6 w-full max-w-sm space-y-4 shadow-xl">
+            <h3 className="font-serif text-xl">Why are you pausing?</h3>
+            <p className="text-sm text-muted-foreground">No worries — your circle will still be here when you're back.</p>
+            <div className="space-y-2">
+              {[
+                "My partner is home for now 🏠",
+                "We're away for a bit ✈️",
+                "Just need a break",
+              ].map(reason => (
+                <button
+                  key={reason}
+                  onClick={async () => {
+                    await base44.entities.Family.update(family.id, { paused: true, pause_reason: reason });
+                    setFamily(f => ({ ...f, paused: true, pause_reason: reason }));
+                    setShowPauseOverlay(false);
+                  }}
+                  className="w-full text-left px-4 py-3 rounded-xl border bg-card hover:bg-secondary transition-colors text-sm"
+                >
+                  {reason}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setShowPauseOverlay(false)}
+              className="w-full text-center text-xs text-muted-foreground/60 hover:text-muted-foreground pt-1"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

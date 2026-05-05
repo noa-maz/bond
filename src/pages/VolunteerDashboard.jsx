@@ -352,12 +352,18 @@ export default function VolunteerDashboard() {
 
                 {/* 6. Schedule a visit */}
                 {isApproved && (
-                  <ScheduleVisitForm
-                    familyId={family.id}
-                    volunteer={volunteer}
-                    existingVisits={visits.filter(v => v.family_id === family.id)}
-                    onVisitAdded={v => setVisits(prev => [...prev, v])}
-                  />
+                  family.paused ? (
+                    <p className="text-sm text-muted-foreground italic text-center py-1">
+                      This family has paused their circle for now — they'll be back soon.
+                    </p>
+                  ) : (
+                    <ScheduleVisitForm
+                      familyId={family.id}
+                      volunteer={volunteer}
+                      existingVisits={visits.filter(v => v.family_id === family.id)}
+                      onVisitAdded={v => setVisits(prev => [...prev, v])}
+                    />
+                  )
                 )}
               </div>
               );

@@ -29,6 +29,14 @@
     "user_email": {
       "type": "string",
       "title": "User Email"
+    },
+    "paused": {
+      "type": "boolean",
+      "title": "Circle Paused"
+    },
+    "pause_reason": {
+      "type": "string",
+      "title": "Pause Reason"
     }
   },
   "required": [
