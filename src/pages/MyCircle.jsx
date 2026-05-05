@@ -46,10 +46,11 @@ export default function MyCircle() {
     }
   };
 
-  const handleApprove = async (volunteerId) => {
-    await base44.entities.Volunteer.update(volunteerId, { approved: true });
+  const handleApprove = async (vol) => {
+    const updated = [...(vol.approved_family_ids || []), family.id];
+    await base44.entities.Volunteer.update(vol.id, { approved_family_ids: updated });
     setVolunteers((prev) =>
-      prev.map((v) => (v.id === volunteerId ? { ...v, approved: true } : v))
+      prev.map((v) => (v.id === vol.id ? { ...v, approved_family_ids: updated } : v))
     );
   };
 
@@ -242,7 +243,7 @@ export default function MyCircle() {
               return (
                 <div className="space-y-2">
                   {upcoming.map(v => {
-                    const isApproved = volunteers.some(vol => vol.id === v.volunteer_id && vol.approved);
+                    const isApproved = volunteers.some(vol => vol.id === v.volunteer_id && vol.approved_family_ids?.includes(family.id));
                     return (
                       <div key={v.id} className={`bg-card rounded-xl border p-4 flex items-start gap-3 ${!isApproved ? 'opacity-60' : ''}`}>
                         <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold flex-shrink-0">
@@ -269,14 +270,14 @@ export default function MyCircle() {
           </div>
 
           {/* Pending approval */}
-          {volunteers.filter((v) => !v.approved).length > 0 && (
+          {volunteers.filter((v) => !v.approved_family_ids?.includes(family.id)).length > 0 && (
             <div className="space-y-3">
               <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
                 Someone wants to join your circle
               </h2>
               <div className="space-y-3">
                 {volunteers
-                  .filter((v) => !v.approved)
+                  .filter((v) => !v.approved_family_ids?.includes(family.id))
                   .map((vol) => (
                     <div
                       key={vol.id}
@@ -292,7 +293,7 @@ export default function MyCircle() {
                         </p>
                       </div>
                       <button
-                        onClick={() => handleApprove(vol.id)}
+                        onClick={() => handleApprove(vol)}
                         className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
                       >
                         Welcome them in
@@ -308,11 +309,11 @@ export default function MyCircle() {
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" />
               <h2 className="font-semibold text-lg">
-                Your circle ({volunteers.filter((v) => v.approved).length})
+                Your circle ({volunteers.filter((v) => v.approved_family_ids?.includes(family.id)).length})
               </h2>
             </div>
 
-            {volunteers.filter((v) => v.approved).length === 0 ? (
+            {volunteers.filter((v) => v.approved_family_ids?.includes(family.id)).length === 0 ? (
               <div className="text-center py-12 bg-card rounded-2xl border space-y-3">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
                   <Heart className="w-7 h-7 text-primary" />
@@ -325,7 +326,7 @@ export default function MyCircle() {
             ) : (
               <div className="space-y-3">
                 {volunteers
-                  .filter((v) => v.approved)
+                  .filter((v) => v.approved_family_ids?.includes(family.id))
                   .map((vol) => (
                     <CircleMember key={vol.id} volunteer={vol} />
                   ))}

@@ -44,9 +44,12 @@
         "type": "string"
       }
     },
-    "approved": {
-      "type": "boolean",
-      "title": "Approved by Family"
+    "approved_family_ids": {
+      "type": "array",
+      "title": "Approved Family IDs",
+      "items": {
+        "type": "string"
+      }
     },
     "user_email": {
       "type": "string",

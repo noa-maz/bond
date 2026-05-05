@@ -261,7 +261,7 @@ export default function VolunteerDashboard() {
             )}
 
             {families.map((family) => {
-              const isApproved = volunteer.approved === true;
+              const isApproved = volunteer.approved_family_ids?.includes(family.id);
               const needs = getFamilyNeeds(family.needs);
               const lastUpdated = formatLastUpdated(family.updated_date);
               const familyVisits = visits.filter(v => v.family_id === family.id && v.volunteer_id === volunteer.id);
