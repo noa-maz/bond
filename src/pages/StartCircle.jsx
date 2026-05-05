@@ -30,7 +30,11 @@ export default function StartCircle() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const userName = localStorage.getItem("bond_user_name") || form.name;
+    let userName = localStorage.getItem("bond_user_name");
+    if (!userName) {
+      try { const me = await base44.auth.me(); userName = me?.email; } catch {}
+    }
+    if (!userName) userName = form.name;
     await base44.entities.Family.create({
       ...form,
       number_of_children: Number(form.number_of_children),
