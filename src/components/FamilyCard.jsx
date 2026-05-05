@@ -8,8 +8,8 @@ const NEED_LABELS = {
   someone_to_talk: "Just being there",
 };
 
-export default function FamilyCard({ family, onCommit, isCommitting, alreadyCommitted, volunteerCount = 0, approvedCount = 0 }) {
-  const isFull = approvedCount >= 4;
+export default function FamilyCard({ family, onCommit, isCommitting, alreadyCommitted, volunteerCount = 0 }) {
+  const isFull = volunteerCount >= 4;
   const initials = family.name
     ? family.name.charAt(0).toUpperCase()
     : "?";
