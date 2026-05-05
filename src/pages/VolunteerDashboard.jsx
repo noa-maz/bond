@@ -68,6 +68,7 @@ export default function VolunteerDashboard() {
   }, []);
 
   const loadData = async () => {
+    try {
     const userName = localStorage.getItem("bond_user_name");
     const isDemoUser = userName && !userName.includes('@');
     const vols = await base44.entities.Volunteer.filter({
@@ -86,7 +87,11 @@ export default function VolunteerDashboard() {
       setFamilies(allFetched.filter(f => isDemoUser ? f.is_demo === true : !f.is_demo));
       setVisits(familyVisitArrays.flat());
     }
-    setLoading(false);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
