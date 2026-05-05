@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
       emailsSent++;
     }
 
-    return Response.json({ success: true, emailsSent });
+    return Response.json({ success: true, emailsSent, sentTo: committed.map(v => v.user_email) });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
