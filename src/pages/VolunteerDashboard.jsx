@@ -347,21 +347,9 @@ export default function VolunteerDashboard() {
                     You chose them. That means everything.
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-1.5">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-muted-foreground text-xs font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50 inline-block"></span>
-                      Waiting to be welcomed in
-                    </div>
-                    <button
-                      onClick={async () => {
-                        const updated = (volunteer.committed_family_ids || []).filter(id => id !== family.id);
-                        await base44.entities.Volunteer.update(volunteer.id, { committed_family_ids: updated });
-                        loadData();
-                      }}
-                      className="text-xs text-muted-foreground/60 hover:text-destructive transition-colors underline underline-offset-2 text-left w-fit"
-                    >
-                      Withdraw request
-                    </button>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-muted-foreground text-xs font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50 inline-block"></span>
+                    Waiting to be welcomed in
                   </div>
                 )}
 
