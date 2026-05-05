@@ -251,8 +251,10 @@ export default function VolunteerDashboard() {
               </div>
             )}
 
-            {families.map((family) => (
-              <div key={family.id} className="bg-card rounded-2xl border p-6 space-y-4">
+            {families.map((family) => {
+              const isApproved = volunteer.approved === true;
+              return (
+              <div key={family.id} className={`bg-card rounded-2xl border p-6 space-y-4 ${!isApproved ? 'opacity-70' : ''}`}>
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-serif text-2xl flex-shrink-0">
                     {family.name?.charAt(0).toUpperCase()}
@@ -302,13 +304,20 @@ export default function VolunteerDashboard() {
                   </div>
                 )}
 
-                <div className="flex items-center gap-2 text-primary text-sm font-medium pt-1">
-                  <Heart className="w-4 h-4 fill-primary" />
-                  You chose them. That means everything.
-                </div>
+                {isApproved ? (
+                  <div className="flex items-center gap-2 text-primary text-sm font-medium pt-1">
+                    <Heart className="w-4 h-4 fill-primary" />
+                    You chose them. That means everything.
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-muted-foreground text-xs font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50 inline-block"></span>
+                    Waiting to be welcomed in
+                  </div>
+                )}
 
                 {/* Scheduled visits for this family */}
-                {visits.filter(v => v.family_id === family.id && v.volunteer_id === volunteer.id).length > 0 && (
+                {isApproved && visits.filter(v => v.family_id === family.id && v.volunteer_id === volunteer.id).length > 0 && (
                   <div className="space-y-1">
                     <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Your upcoming visits</p>
                     {visits
@@ -325,14 +334,17 @@ export default function VolunteerDashboard() {
                   </div>
                 )}
 
-                <ScheduleVisitForm
-                  familyId={family.id}
-                  volunteer={volunteer}
-                  existingVisits={visits.filter(v => v.family_id === family.id)}
-                  onVisitAdded={v => setVisits(prev => [...prev, v])}
-                />
+                {isApproved && (
+                  <ScheduleVisitForm
+                    familyId={family.id}
+                    volunteer={volunteer}
+                    existingVisits={visits.filter(v => v.family_id === family.id)}
+                    onVisitAdded={v => setVisits(prev => [...prev, v])}
+                  />
+                )}
               </div>
-            ))}
+              );
+            })}
 
             <Link to="/browse-families">
               <Button variant="outline" className="w-full rounded-2xl h-12 gap-2">
