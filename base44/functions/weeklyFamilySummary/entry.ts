@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
 </div>`;
 
       await base44.asServiceRole.integrations.Core.SendEmail({
-        to: family.user_email,
+        to: familyUser.email,
         subject,
         body,
         content_type: 'text/html',
