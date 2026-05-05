@@ -325,7 +325,7 @@ export default function MyCircle() {
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" />
               <h2 className="font-semibold text-lg">
-                Your circle ({volunteers.filter((v) => v.approved_family_ids?.includes(family.id)).length})
+                Your circle ({volunteers.filter((v) => v.approved_family_ids?.includes(family.id)).length} approved)
               </h2>
             </div>
 
