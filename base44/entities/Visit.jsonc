@@ -36,54 +36,11 @@
     "visit_type"
   ],
   "rls": {
-    "create": {
-      "$or": [
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        },
-        {
-          "$and": [
-            {
-              "created_by": "{{user.email}}"
-            },
-            {
-              "data.volunteer_id": "{{user.data.my_volunteer_id}}"
-            },
-            {
-              "data.family_id": {
-                "$in": "{{user.data.my_committed_family_ids}}"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    "read": {
-      "$or": [
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        },
-        {
-          "created_by": "{{user.email}}"
-        },
-        {
-          "data.volunteer_id": "{{user.data.my_volunteer_id}}"
-        },
-        {
-          "data.family_id": "{{user.data.my_family_id}}"
-        }
-      ]
-    },
+    "create": null,
     "update": {
       "$or": [
         {
-          "user_condition": {
-            "role": "admin"
-          }
+          "created_by": "{{user.email}}"
         },
         {
           "created_by": "{{user.email}}"
@@ -98,11 +55,6 @@
     },
     "delete": {
       "$or": [
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        },
         {
           "created_by": "{{user.email}}"
         },
