@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -118,7 +118,13 @@ export default function VolunteerDashboard() {
             <ArrowLeft className="w-5 h-5" />
           </Button>
         </Link>
-        <span className="font-serif text-xl tracking-tight">BOND</span>
+        <span className="font-serif text-xl tracking-tight flex-1">BOND</span>
+        <button
+          onClick={() => { localStorage.removeItem("bond_user_name"); base44.auth.logout("/"); }}
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Sign out
+        </button>
       </nav>
 
       <main className="flex-1 px-6 md:px-12 py-8 max-w-2xl mx-auto w-full">
