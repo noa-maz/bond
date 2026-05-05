@@ -25,23 +25,24 @@ Deno.serve(async (req) => {
       if (!family?.user_email) continue;
 
       const subject = `🤝 Someone wants to join your circle`;
-      const body = `Hi ${family.name},
-
-${volunteerName} has asked to be part of your support circle. They'd like to show up for you and your family.
-
-✅ Welcome them in and they can start scheduling visits.
-
-❌ Let them know it's not the right fit right now.
-
-Your circle, your choice.
-
-With care,
-The BOND team`;
+      const body = `<div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #2d2d2d; line-height: 1.7;">
+  <p style="font-size: 22px; margin-bottom: 24px;">🤝</p>
+  <p style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Someone wants to join your circle</p>
+  <p style="margin-bottom: 16px;">${volunteerName} has asked to be part of your support circle.</p>
+  <p style="margin-bottom: 16px;">They'd like to show up for you and your family. You're in charge of who's in your circle, so this is your call.</p>
+  <ul style="padding-left: 20px; margin-bottom: 16px;">
+    <li style="margin-bottom: 8px;">✅ Welcome them in and they can start scheduling visits.</li>
+    <li style="margin-bottom: 8px;">❌ Let them know it's not the right fit right now.</li>
+  </ul>
+  <p style="margin-bottom: 32px;">Your circle, your choice.</p>
+  <p style="color: #888; font-size: 13px;">With care,<br/>The BOND team</p>
+</div>`;
 
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: family.user_email,
         subject,
         body,
+        content_type: 'text/html',
       });
 
       emailsSent++;

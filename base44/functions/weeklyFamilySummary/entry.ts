@@ -28,34 +28,36 @@ Deno.serve(async (req) => {
       const familyVisits = recentVisits.filter(v => v.family_id === family.id);
       if (familyVisits.length === 0) continue;
 
-      const visitLines = familyVisits
+      const visitItems = familyVisits
         .sort((a, b) => a.date.localeCompare(b.date))
         .map(v => {
           const dateLabel = new Date(v.date + 'T12:00:00').toLocaleDateString('en-US', {
             weekday: 'long', month: 'long', day: 'numeric'
           });
-          let line = `✅ ${v.volunteer_name} — ${dateLabel} · ${v.visit_type}`;
-          if (v.note) line += `\n  "${v.note}"`;
-          return line;
+          let item = `<li style="margin-bottom: 8px;">✅ ${v.volunteer_name} — ${dateLabel} · ${v.visit_type}`;
+          if (v.note) item += `<br/><span style="font-size: 14px; color: #666; margin-left: 20px;">"${v.note}"</span>`;
+          item += '</li>';
+          return item;
         })
-        .join('\n\n');
+        .join('');
 
       const subject = `📋 Your circle this week`;
-      const body = `Hi ${family.name},
-
-Here's who showed up for you this week:
-
-${visitLines}
-
-Your circle is showing up for you. 💛
-
-With care,
-The BOND team`;
+      const body = `<div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #2d2d2d; line-height: 1.7;">
+  <p style="font-size: 22px; margin-bottom: 24px;">📋</p>
+  <p style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Your circle this week</p>
+  <p style="margin-bottom: 16px;">Here's who showed up for you this week:</p>
+  <ul style="padding-left: 20px; margin-bottom: 16px;">
+    ${visitItems}
+  </ul>
+  <p style="margin-bottom: 32px;">Your circle is showing up for you. 💛</p>
+  <p style="color: #888; font-size: 13px;">With care,<br/>The BOND team</p>
+</div>`;
 
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: family.user_email,
         subject,
         body,
+        content_type: 'text/html',
       });
 
       emailsSent++;

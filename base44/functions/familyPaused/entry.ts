@@ -27,23 +27,23 @@ Deno.serve(async (req) => {
 
     for (const vol of committed) {
       const subject = `⏸️ ${familyName}'s circle is taking a short break`;
-      const body = `Hi ${vol.name},
-
-${familyName} needs a pause from their circle${pauseReason ? ` — "${pauseReason}"` : ''}. This doesn't mean anything has gone wrong.
-
-🌿 Your commitment still means everything to them.
-
-When they're ready to welcome support again, we'll let you know right away.
-
-Thank you for being someone they can count on.
-
-With care,
-The BOND team`;
+      const body = `<div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #2d2d2d; line-height: 1.7;">
+  <p style="font-size: 22px; margin-bottom: 24px;">⏸️</p>
+  <p style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">${familyName}'s circle is taking a short break</p>
+  <p style="margin-bottom: 16px;">They need a pause from their circle${pauseReason ? ` — "${pauseReason}"` : ''}.</p>
+  <p style="margin-bottom: 16px;">This doesn't mean anything has gone wrong. Life has rhythms, and sometimes families need a quiet moment to breathe.</p>
+  <ul style="padding-left: 20px; margin-bottom: 16px;">
+    <li style="margin-bottom: 8px;">🌿 Your commitment still means everything to them.</li>
+  </ul>
+  <p style="margin-bottom: 32px;">When they're ready to welcome support again, we'll let you know right away.</p>
+  <p style="color: #888; font-size: 13px;">With care,<br/>The BOND team</p>
+</div>`;
 
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: vol.user_email,
         subject,
         body,
+        content_type: 'text/html',
       });
 
       emailsSent++;
