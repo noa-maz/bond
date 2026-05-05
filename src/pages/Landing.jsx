@@ -1,10 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -16,25 +13,6 @@ const fadeUp = {
 };
 
 export default function Landing() {
-  const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleEnter = async () => {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    localStorage.setItem("bond_user_name", trimmed);
-    setLoading(true);
-    try {
-      const families = await base44.entities.Family.filter({ user_email: trimmed });
-      if (families.length > 0) { navigate("/my-circle"); return; }
-      const volunteers = await base44.entities.Volunteer.filter({ user_email: trimmed });
-      if (volunteers.length > 0) { navigate("/volunteer-dashboard"); return; }
-      navigate("/choose-circle");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -66,32 +44,14 @@ export default function Landing() {
             <span className="text-primary font-medium">For real.</span>
           </motion.p>
 
-          <motion.div custom={2} variants={fadeUp} className="space-y-3 max-w-sm mx-auto">
-            <p className="text-muted-foreground text-sm">What's your name?</p>
-            <div className="flex gap-3">
-              <Input
-                placeholder="e.g. Noa"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && !loading && handleEnter()}
-                className="h-12 rounded-xl bg-card text-base"
-                disabled={loading}
-              />
-              <Button
-                onClick={handleEnter}
-                disabled={!name.trim() || loading}
-                className="h-12 px-5 rounded-xl gap-2 shrink-0"
-              >
-                {loading ? (
-                  <span className="text-sm">Looking for you…</span>
-                ) : (
-                  <>
-                    Enter BOND
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </Button>
-            </div>
+          <motion.div custom={2} variants={fadeUp} className="max-w-sm mx-auto">
+            <Button
+              onClick={() => base44.auth.redirectToLogin('/after-login')}
+              className="h-12 px-8 rounded-xl gap-2"
+            >
+              Enter BOND
+              <ArrowRight className="w-4 h-4" />
+            </Button>
           </motion.div>
         </motion.div>
 

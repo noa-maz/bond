@@ -11,8 +11,10 @@ export default function AfterLogin() {
   }, []);
 
   const redirect = async () => {
-    const userName = localStorage.getItem("bond_user_name");
-    if (!userName) { navigate("/"); return; }
+    const user = await base44.auth.me();
+    if (!user) { navigate("/"); return; }
+    const userName = user.email;
+    localStorage.setItem("bond_user_name", userName);
 
     const families = await base44.entities.Family.filter({ user_email: userName });
     if (families.length > 0) { navigate("/my-circle"); return; }
