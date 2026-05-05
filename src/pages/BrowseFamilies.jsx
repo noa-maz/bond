@@ -80,6 +80,7 @@ export default function BrowseFamilies() {
   const filteredFamilies = families.filter(family => {
     if (family.paused) return false;
     if (family.is_demo && !isDemoUser) return false;
+    if (!family.is_demo && isDemoUser) return false;
     if (areaFilter && !family.neighborhood?.toLowerCase().includes(areaFilter.toLowerCase())) return false;
     if (needFilter.length > 0) {
       const hasMatch = needFilter.some(nt => family.needs?.[NEED_KEY_MAP[nt]]?.selected);

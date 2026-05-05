@@ -69,6 +69,7 @@ export default function VolunteerDashboard() {
 
   const loadData = async () => {
     const userName = localStorage.getItem("bond_user_name");
+    const isDemoUser = userName && !userName.includes('@');
     const vols = await base44.entities.Volunteer.filter({
       user_email: userName,
     });
@@ -81,7 +82,8 @@ export default function VolunteerDashboard() {
         Promise.all(familyIds.map(id => base44.entities.Family.filter({ id }))),
         ...familyIds.map(id => base44.entities.Visit.filter({ family_id: id })),
       ]);
-      setFamilies(familyResults.map(r => r[0]).filter(Boolean));
+      const allFetched = familyResults.map(r => r[0]).filter(Boolean);
+      setFamilies(allFetched.filter(f => isDemoUser ? f.is_demo === true : !f.is_demo));
       setVisits(familyVisitArrays.flat());
     }
     setLoading(false);

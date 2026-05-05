@@ -26,6 +26,7 @@ export default function MyCircle() {
   const loadData = async () => {
     try {
       const userName = localStorage.getItem("bond_user_name");
+      const isDemoUser = userName && !userName.includes('@');
       const families = await base44.entities.Family.filter({
         user_email: userName,
       });
@@ -37,7 +38,10 @@ export default function MyCircle() {
           base44.entities.Volunteer.list(),
           base44.entities.Visit.filter({ family_id: fam.id }),
         ]);
-        const filteredVols = allVols.filter(v => v.committed_family_ids?.includes(fam.id));
+        const filteredVols = allVols.filter(v =>
+          v.committed_family_ids?.includes(fam.id) &&
+          (isDemoUser ? v.is_demo === true : !v.is_demo)
+        );
         setVolunteers(filteredVols);
         setVisits(familyVisits);
       }
