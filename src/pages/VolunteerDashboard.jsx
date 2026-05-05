@@ -371,6 +371,34 @@ export default function VolunteerDashboard() {
                   </>
                 )}
 
+                {/* 5b. Past visits */}
+                {isApproved && (() => {
+                  const today = new Date().toISOString().split('T')[0];
+                  const pastVisits = familyVisits
+                    .filter(v => v.date < today)
+                    .sort((a, b) => b.date.localeCompare(a.date));
+                  if (pastVisits.length === 0) return null;
+                  return (
+                    <>
+                      <div className="border-t" />
+                      <div className="space-y-1">
+                        <p className="text-xs text-muted-foreground/60 font-medium uppercase tracking-wider">Past visits</p>
+                        {pastVisits.map(v => (
+                          <div key={v.id} className="flex flex-col gap-0.5">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground/60">
+                              <CalendarDays className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>{new Date(v.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+                              <span>·</span>
+                              <span>{v.visit_type}</span>
+                            </div>
+                            {v.note && <p className="text-xs text-muted-foreground/50 italic pl-5">"{v.note}"</p>}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  );
+                })()}
+
                 {/* 6. Schedule a visit */}
                 {isApproved && !family.paused && (
                   <ScheduleVisitForm
