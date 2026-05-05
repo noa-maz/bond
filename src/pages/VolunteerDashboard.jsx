@@ -26,7 +26,16 @@ const getFamilyNeeds = (needs) => {
   if (!needs || typeof needs !== "object") return [];
   return Object.entries(needs)
     .filter(([, v]) => v?.selected)
-    .map(([k]) => NEED_LABELS[k] || k);
+    .map(([k, v]) => ({ label: NEED_LABELS[k] || k, note: v?.text || '' }));
+};
+
+const formatLastUpdated = (dateStr) => {
+  if (!dateStr) return null;
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+  const formatted = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return { formatted, isRecent: diffDays <= 7 };
 };
 import ScheduleVisitForm from "../components/ScheduleVisitForm";
 
@@ -283,16 +292,28 @@ export default function VolunteerDashboard() {
                         {family.phone}
                       </a>
                     )}
-                    {getFamilyNeeds(family.needs).length > 0 && (
-                      <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <span className="text-xs text-muted-foreground font-medium">What they need most:</span>
-                        {getFamilyNeeds(family.needs).map(need => (
-                          <span key={need} className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">
-                            {need}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                    {getFamilyNeeds(family.needs).length > 0 && (() => {
+                      const needs = getFamilyNeeds(family.needs);
+                      const lastUpdated = formatLastUpdated(family.updated_date);
+                      return (
+                        <div className="mt-2 space-y-1">
+                          <span className="text-xs text-muted-foreground font-medium">What they need most:</span>
+                          <div className="flex flex-wrap gap-2">
+                            {needs.map(({ label, note }) => (
+                              <div key={label} className="flex flex-col gap-0.5">
+                                <span className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">{label}</span>
+                                {note && <span className="text-xs text-muted-foreground italic px-1">{note}</span>}
+                              </div>
+                            ))}
+                          </div>
+                          {lastUpdated && (
+                            <p className={`text-xs ${lastUpdated.isRecent ? 'text-amber-600' : 'text-muted-foreground'}`}>
+                              Last updated: {lastUpdated.formatted}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 
