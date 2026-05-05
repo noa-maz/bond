@@ -183,11 +183,15 @@ export default function BrowseFamilies() {
           {filteredFamilies.length === 0 ? (
             <div className="text-center py-16 space-y-3">
               <p className="text-muted-foreground text-lg">
-                {families.length === 0 ? "No families have registered yet." : "No families match your filters."}
+                {families.length === 0
+                  ? (isDemoUser ? "No families have registered yet." : "You're one of the first here. Families are on their way — your circle is about to begin.")
+                  : "No families match your filters."}
               </p>
-              <p className="text-sm text-muted-foreground">
-                {families.length === 0 ? "Check back soon — new families are joining every day." : "Try adjusting your filters."}
-              </p>
+              {(families.length > 0 || isDemoUser) && (
+                <p className="text-sm text-muted-foreground">
+                  {families.length === 0 ? "Check back soon — new families are joining every day." : "Try adjusting your filters."}
+                </p>
+              )}
             </div>
           ) : (
             <div className="space-y-4">
