@@ -26,16 +26,16 @@ Deno.serve(async (req) => {
     let emailsSent = 0;
 
     for (const vol of committed) {
-      const subject = `A family has paused their circle ⏸`;
+      const subject = `⏸️ ${familyName}'s circle is taking a short break`;
       const body = `Hi ${vol.name},
 
-${familyName} has decided to take a short break from their circle${pauseReason ? ` — "${pauseReason}"` : ''}.
+${familyName} needs a pause from their circle${pauseReason ? ` — "${pauseReason}"` : ''}. This doesn't mean anything has gone wrong.
 
-This doesn't mean anything has gone wrong. Life has rhythms, and sometimes families need a quiet moment to breathe.
+🌿 Your commitment still means everything to them.
 
-Your commitment still means everything. When they're ready to welcome support again, you'll be the first to know.
+When they're ready to welcome support again, we'll let you know right away.
 
-Thank you for being someone they can count on — even in the pauses.
+Thank you for being someone they can count on.
 
 With care,
 The BOND team`;

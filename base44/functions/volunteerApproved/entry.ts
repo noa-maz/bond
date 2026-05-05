@@ -25,23 +25,20 @@ Deno.serve(async (req) => {
       const family = families[0];
       const familyName = family?.name || 'A family';
 
-      const subject = `You've been welcomed in ❤️`;
+      const subject = `❤️ You've been welcomed in`;
       const body = `Hi ${data.name},
 
-${familyName} has welcomed you into their circle.
+${familyName} has welcomed you into their circle. They've opened their door to you — and that takes trust.
 
-This is the beginning of something real. They've opened their door to you — and that takes trust.
+📅 Head into the app and schedule your first visit.
 
-Here's what you can do next:
-• Head into the app and schedule your first visit.
-• Choose a date, a type of support, and let them know you're coming.
-• Show up. That's it.
+💛 Choose a date and type of support, and let them know you're coming.
+
+✨ Show up. That's all they need.
 
 You don't need to have all the answers. You just need to be there.
 
-Thank you for being a neighbor worth trusting.
-
-With warmth,
+With care,
 The BOND team`;
 
       await base44.asServiceRole.integrations.Core.SendEmail({

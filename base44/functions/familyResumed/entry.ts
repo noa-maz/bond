@@ -24,19 +24,17 @@ Deno.serve(async (req) => {
     let emailsSent = 0;
 
     for (const vol of committed) {
-      const subject = `Good news - they're back 💛`;
+      const subject = `🌟 Good news — they're back`;
       const body = `Hi ${vol.name},
 
-${familyName} is back and ready to reconnect.
+      ${familyName} is back and ready to reconnect. They've resumed their circle and your support matters.
 
-They've resumed their circle, which means your support matters again — right now.
+      📅 Head into the app and schedule your next visit whenever you're ready.
 
-If you've been waiting for the right moment to show up, this is it. Head into the app and schedule your next visit whenever you're ready.
+      Thank you for staying committed even through the pauses.
 
-Thank you for staying committed even through the quiet stretches. That kind of loyalty doesn't go unnoticed.
-
-With warmth,
-The BOND team`;
+      With care,
+      The BOND team`;
 
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: vol.user_email,

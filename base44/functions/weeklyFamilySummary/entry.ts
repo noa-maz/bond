@@ -34,20 +34,20 @@ Deno.serve(async (req) => {
           const dateLabel = new Date(v.date + 'T12:00:00').toLocaleDateString('en-US', {
             weekday: 'long', month: 'long', day: 'numeric'
           });
-          let line = `• ${dateLabel} — ${v.visit_type} by ${v.volunteer_name}`;
+          let line = `✅ ${v.volunteer_name} — ${dateLabel} · ${v.visit_type}`;
           if (v.note) line += `\n  "${v.note}"`;
           return line;
         })
         .join('\n\n');
 
-      const subject = `Your BOND circle this week 💛`;
+      const subject = `📋 Your circle this week`;
       const body = `Hi ${family.name},
 
-Here's a look at what your circle showed up for this week:
+Here's who showed up for you this week:
 
 ${visitLines}
 
-Your neighbors are here for you — one visit at a time.
+Your circle is showing up for you. 💛
 
 With care,
 The BOND team`;

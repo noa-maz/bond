@@ -24,14 +24,14 @@ Deno.serve(async (req) => {
 
       if (!family?.user_email) continue;
 
-      const subject = `Someone wants to join your circle 💛`;
+      const subject = `🤝 Someone wants to join your circle`;
       const body = `Hi ${family.name},
 
-Good news — ${volunteerName} has asked to be part of your support circle.
+${volunteerName} has asked to be part of your support circle. They'd like to show up for you and your family.
 
-They'd like to show up for you and your family. You're in charge of who's in your circle, so we wanted to let you know before anything is confirmed.
+✅ Welcome them in and they can start scheduling visits.
 
-Head into the app to welcome them in or let them know it's not the right fit right now. Either is completely okay.
+❌ Let them know it's not the right fit right now.
 
 Your circle, your choice.
 
