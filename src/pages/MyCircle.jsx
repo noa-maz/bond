@@ -284,42 +284,44 @@ export default function MyCircle() {
                 Someone wants to join your circle
               </h2>
               <div className="space-y-3">
-                {volunteers
-                  .filter((v) => !v.approved_family_ids?.includes(family.id))
-                  .map((vol) => (
-                    <div
-                      key={vol.id}
-                      className="flex items-center gap-4 bg-card rounded-xl border border-dashed p-4"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-semibold flex-shrink-0">
-                        {vol.name?.charAt(0).toUpperCase() || "?"}
+                  {volunteers
+                    .filter((v) => !v.approved_family_ids?.includes(family.id))
+                    .map((vol) => (
+                      <div
+                        key={vol.id}
+                        className="flex flex-col sm:flex-row sm:items-center gap-4 bg-card rounded-xl border border-dashed p-4"
+                      >
+                        <div className="flex items-center gap-3 flex-1">
+                          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-semibold flex-shrink-0">
+                            {vol.name?.charAt(0).toUpperCase() || "?"}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium">{vol.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              ✨ {vol.offer_types?.join(", ")}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                          <button
+                            onClick={() => handleApprove(vol)}
+                            className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors sm:whitespace-nowrap"
+                          >
+                            Welcome them in
+                          </button>
+                          <button
+                            onClick={async () => {
+                              const updated = (vol.committed_family_ids || []).filter(id => id !== family.id);
+                              await base44.entities.Volunteer.update(vol.id, { committed_family_ids: updated });
+                              setVolunteers(prev => prev.filter(v => v.id !== vol.id));
+                            }}
+                            className="px-4 py-1.5 rounded-lg border border-border text-sm font-medium hover:bg-secondary transition-colors sm:whitespace-nowrap"
+                          >
+                            Not the right fit
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium">{vol.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          ✨ {vol.offer_types?.join(", ")}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleApprove(vol)}
-                          className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-                        >
-                          Welcome them in
-                        </button>
-                        <button
-                          onClick={async () => {
-                            const updated = (vol.committed_family_ids || []).filter(id => id !== family.id);
-                            await base44.entities.Volunteer.update(vol.id, { committed_family_ids: updated });
-                            setVolunteers(prev => prev.filter(v => v.id !== vol.id));
-                          }}
-                          className="px-4 py-1.5 rounded-lg border border-border text-sm font-medium hover:bg-secondary transition-colors"
-                        >
-                          Not the right fit
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
               </div>
             </div>
           )}
