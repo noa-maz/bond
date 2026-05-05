@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart, MapPin, Baby } from "lucide-react";
 
@@ -9,6 +10,7 @@ const NEED_LABELS = {
 };
 
 export default function FamilyCard({ family, onCommit, isCommitting, alreadyCommitted, volunteerCount = 0 }) {
+  const [showConfirm, setShowConfirm] = useState(false);
   const isFull = volunteerCount >= 4;
   const initials = family.name
     ? family.name.charAt(0).toUpperCase()
@@ -68,13 +70,34 @@ export default function FamilyCard({ family, onCommit, isCommitting, alreadyComm
       )}
 
       <Button
-        onClick={() => onCommit(family.id)}
+        onClick={() => setShowConfirm(true)}
         disabled={isCommitting || alreadyCommitted || isFull}
         className="w-full rounded-xl h-11 gap-2"
       >
         <Heart className="w-4 h-4" />
         {alreadyCommitted ? "Already in your circle" : isFull ? "This circle is full." : "Join their circle"}
       </Button>
+
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black/30 flex items-end sm:items-center justify-center z-50 px-4 pb-8 sm:pb-0">
+          <div className="bg-background rounded-2xl border p-6 w-full max-w-sm space-y-4 shadow-xl">
+            <p className="font-serif text-xl leading-snug">This is an ongoing commitment — not a one-time visit.</p>
+            <p className="text-sm text-muted-foreground">Are you in?</p>
+            <div className="flex gap-3 pt-1">
+              <Button
+                className="flex-1"
+                onClick={() => { setShowConfirm(false); onCommit(family.id); }}
+                disabled={isCommitting}
+              >
+                I'm in
+              </Button>
+              <Button variant="ghost" className="flex-1" onClick={() => setShowConfirm(false)}>
+                Not yet
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
