@@ -8,7 +8,8 @@ const NEED_LABELS = {
   someone_to_talk: "Just being there",
 };
 
-export default function FamilyCard({ family, onCommit, isCommitting, alreadyCommitted, volunteerCount = 0 }) {
+export default function FamilyCard({ family, onCommit, isCommitting, alreadyCommitted, volunteerCount = 0, approvedCount = 0 }) {
+  const isFull = approvedCount >= 4;
   const initials = family.name
     ? family.name.charAt(0).toUpperCase()
     : "?";
@@ -48,6 +49,8 @@ export default function FamilyCard({ family, onCommit, isCommitting, alreadyComm
         <div className="mt-2">
           {volunteerCount === 0 ? (
             <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">Waiting for support</span>
+          ) : isFull ? (
+            <span className="text-xs px-2 py-0.5 rounded-full bg-accent/20 text-accent-foreground font-medium">Circle complete</span>
           ) : (
             <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{volunteerCount} neighbor{volunteerCount > 1 ? 's' : ''} committed</span>
           )}
@@ -64,11 +67,11 @@ export default function FamilyCard({ family, onCommit, isCommitting, alreadyComm
 
       <Button
         onClick={() => onCommit(family.id)}
-        disabled={isCommitting || alreadyCommitted}
+        disabled={isCommitting || alreadyCommitted || isFull}
         className="w-full rounded-xl h-11 gap-2"
       >
         <Heart className="w-4 h-4" />
-        {alreadyCommitted ? "Already in your circle" : "Join their circle"}
+        {alreadyCommitted ? "Already in your circle" : isFull ? "This circle is full." : "Join their circle"}
       </Button>
     </div>
   );

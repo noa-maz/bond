@@ -22,6 +22,7 @@ export default function BrowseFamilies() {
   const [committing, setCommitting] = useState(null);
   const [volunteer, setVolunteer] = useState(null);
   const [volunteerCountMap, setVolunteerCountMap] = useState({});
+  const [approvedCountMap, setApprovedCountMap] = useState({});
   const [areaFilter, setAreaFilter] = useState("");
   const [needFilter, setNeedFilter] = useState([]);
   const [circleFilter, setCircleFilter] = useState("All");
@@ -43,12 +44,15 @@ export default function BrowseFamilies() {
     ]);
 
     const countMap = {};
+    const approvedMap = {};
     allVolunteers.forEach(v => {
       (v.committed_family_ids || []).forEach(fid => {
         countMap[fid] = (countMap[fid] || 0) + 1;
+        if (v.approved) approvedMap[fid] = (approvedMap[fid] || 0) + 1;
       });
     });
     setVolunteerCountMap(countMap);
+    setApprovedCountMap(approvedMap);
 
     // Sort by: same neighborhood first, then by volunteer count ascending
     const sorted = [...allFamilies].sort((a, b) => {
@@ -193,6 +197,7 @@ export default function BrowseFamilies() {
                   isCommitting={committing === family.id}
                   alreadyCommitted={volunteer?.committed_family_ids?.includes(family.id)}
                   volunteerCount={volunteerCountMap[family.id] || 0}
+                  approvedCount={approvedCountMap[family.id] || 0}
                 />
               ))}
             </div>
