@@ -266,7 +266,14 @@ export default function VolunteerDashboard() {
               const lastUpdated = formatLastUpdated(family.updated_date);
               const familyVisits = visits.filter(v => v.family_id === family.id && v.volunteer_id === volunteer.id);
               return (
-              <div key={family.id} className={`bg-card rounded-2xl border p-6 space-y-4 ${!isApproved ? 'opacity-70' : ''}`}>
+              <div key={family.id} className={`bg-card rounded-2xl border overflow-hidden space-y-4 ${!isApproved ? 'opacity-70' : ''} ${family.paused ? 'opacity-60' : ''}`}>
+                {/* Paused banner */}
+                {family.paused && (
+                  <div className="bg-amber-50 border-b border-amber-100 px-6 py-3 text-sm text-amber-700">
+                    ⏸ This family has paused their circle for now — they'll be back soon.
+                  </div>
+                )}
+                <div className="px-6 pb-6 space-y-4">
 
                 {/* 1. Header */}
                 <div className="flex items-start gap-4">
@@ -351,20 +358,15 @@ export default function VolunteerDashboard() {
                 )}
 
                 {/* 6. Schedule a visit */}
-                {isApproved && (
-                  family.paused ? (
-                    <p className="text-sm text-muted-foreground italic text-center py-1">
-                      This family has paused their circle for now — they'll be back soon.
-                    </p>
-                  ) : (
-                    <ScheduleVisitForm
-                      familyId={family.id}
-                      volunteer={volunteer}
-                      existingVisits={visits.filter(v => v.family_id === family.id)}
-                      onVisitAdded={v => setVisits(prev => [...prev, v])}
-                    />
-                  )
+                {isApproved && !family.paused && (
+                  <ScheduleVisitForm
+                    familyId={family.id}
+                    volunteer={volunteer}
+                    existingVisits={visits.filter(v => v.family_id === family.id)}
+                    onVisitAdded={v => setVisits(prev => [...prev, v])}
+                  />
                 )}
+                </div>
               </div>
               );
             })}
