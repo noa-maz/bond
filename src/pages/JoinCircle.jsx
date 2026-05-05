@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,25 @@ const FREQUENCIES = [
 
 export default function JoinCircle() {
   const navigate = useNavigate();
+  const [checking, setChecking] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const userEmail = localStorage.getItem("bond_user_name") || (await base44.auth.me())?.email;
+        if (!userEmail) { setChecking(false); return; }
+        const [volunteers, families] = await Promise.all([
+          base44.entities.Volunteer.filter({ user_email: userEmail }),
+          base44.entities.Family.filter({ user_email: userEmail }),
+        ]);
+        if (volunteers.length > 0) { navigate("/volunteer-dashboard"); return; }
+        if (families.length > 0) { navigate("/my-circle"); return; }
+      } catch {}
+      setChecking(false);
+    };
+    check();
+  }, []);
   const [form, setForm] = useState({
     name: "",
     neighborhood: "",
@@ -67,6 +85,14 @@ export default function JoinCircle() {
     });
     navigate("/browse-families");
   };
+
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
