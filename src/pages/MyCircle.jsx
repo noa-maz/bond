@@ -296,12 +296,24 @@ export default function MyCircle() {
                           ✨ {vol.offer_types?.join(", ")}
                         </p>
                       </div>
-                      <button
-                        onClick={() => handleApprove(vol)}
-                        className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-                      >
-                        Welcome them in
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleApprove(vol)}
+                          className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+                        >
+                          Welcome them in
+                        </button>
+                        <button
+                          onClick={async () => {
+                            const updated = (vol.committed_family_ids || []).filter(id => id !== family.id);
+                            await base44.entities.Volunteer.update(vol.id, { committed_family_ids: updated });
+                            setVolunteers(prev => prev.filter(v => v.id !== vol.id));
+                          }}
+                          className="px-4 py-1.5 rounded-lg border border-border text-sm font-medium hover:bg-secondary transition-colors"
+                        >
+                          Not the right fit
+                        </button>
+                      </div>
                     </div>
                   ))}
               </div>
