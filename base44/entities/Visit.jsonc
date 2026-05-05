@@ -37,41 +37,80 @@
   ],
   "rls": {
     "create": {
-      "created_by": "{{user.email}}"
-    },
-    "read": {
       "$or": [
-        {
-          "created_by": "{{user.email}}"
-        },
         {
           "user_condition": {
             "role": "admin"
           }
+        },
+        {
+          "$and": [
+            {
+              "created_by": "{{user.email}}"
+            },
+            {
+              "data.volunteer_id": "{{user.data.my_volunteer_id}}"
+            },
+            {
+              "data.family_id": {
+                "$in": "{{user.data.my_committed_family_ids}}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "data.volunteer_id": "{{user.data.my_volunteer_id}}"
+        },
+        {
+          "data.family_id": "{{user.data.my_family_id}}"
         }
       ]
     },
     "update": {
       "$or": [
         {
-          "created_by": "{{user.email}}"
-        },
-        {
           "user_condition": {
             "role": "admin"
           }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "data.volunteer_id": "{{user.data.my_volunteer_id}}"
+        },
+        {
+          "data.family_id": "{{user.data.my_family_id}}"
         }
       ]
     },
     "delete": {
       "$or": [
         {
-          "created_by": "{{user.email}}"
-        },
-        {
           "user_condition": {
             "role": "admin"
           }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "data.volunteer_id": "{{user.data.my_volunteer_id}}"
+        },
+        {
+          "data.family_id": "{{user.data.my_family_id}}"
         }
       ]
     }
