@@ -16,12 +16,16 @@ const fadeUp = {
 
 export default function Landing() {
   const navigate = useNavigate();
-  const [showDemo, setShowDemo] = useState(false);
+  const [showDemo, setShowDemo] = useState(() => sessionStorage.getItem('bond_demo_open') === 'true');
   const [demoProfiles, setDemoProfiles] = useState([]);
   const [demoLoading, setDemoLoading] = useState(false);
 
+  useEffect(() => {
+    if (showDemo) loadDemo();
+  }, []);
+
   const loadDemo = async () => {
-    if (demoProfiles.length > 0) { setShowDemo(true); return; }
+    if (demoProfiles.length > 0) { setShowDemo(true); sessionStorage.setItem('bond_demo_open', 'true'); return; }
     setDemoLoading(true);
     const [families, volunteers] = await Promise.all([
       base44.entities.Family.list(),
@@ -86,7 +90,7 @@ export default function Landing() {
 
             <div className="space-y-3">
               <button
-                onClick={() => showDemo ? setShowDemo(false) : loadDemo()}
+                onClick={() => { if (showDemo) { setShowDemo(false); sessionStorage.setItem('bond_demo_open', 'false'); } else { loadDemo(); sessionStorage.setItem('bond_demo_open', 'true'); } }}
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mx-auto"
               >
                 Want to explore first? Try a demo account.
