@@ -1,7 +1,9 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -13,6 +15,35 @@ const fadeUp = {
 };
 
 export default function Landing() {
+  const navigate = useNavigate();
+  const [showDemo, setShowDemo] = useState(false);
+  const [demoProfiles, setDemoProfiles] = useState([]);
+  const [demoLoading, setDemoLoading] = useState(false);
+
+  const loadDemo = async () => {
+    if (demoProfiles.length > 0) { setShowDemo(true); return; }
+    setDemoLoading(true);
+    const [families, volunteers] = await Promise.all([
+      base44.entities.Family.list(),
+      base44.entities.Volunteer.list(),
+    ]);
+    const profiles = [
+      ...families.filter(f => f.user_email && !f.user_email.includes('@')).map(f => ({ ...f, role: 'Family' })),
+      ...volunteers.filter(v => v.user_email && !v.user_email.includes('@')).map(v => ({ ...v, role: 'Volunteer' })),
+    ];
+    setDemoProfiles(profiles);
+    setDemoLoading(false);
+    setShowDemo(true);
+  };
+
+  const enterAsDemo = async (profile) => {
+    localStorage.setItem('bond_user_name', profile.user_email);
+    const families = await base44.entities.Family.filter({ user_email: profile.user_email });
+    if (families.length > 0) { navigate('/my-circle'); return; }
+    const volunteers = await base44.entities.Volunteer.filter({ user_email: profile.user_email });
+    if (volunteers.length > 0) { navigate('/volunteer-dashboard'); return; }
+    navigate('/choose-circle');
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -44,7 +75,7 @@ export default function Landing() {
             <span className="text-primary font-medium">For real.</span>
           </motion.p>
 
-          <motion.div custom={2} variants={fadeUp} className="max-w-sm mx-auto">
+          <motion.div custom={2} variants={fadeUp} className="max-w-sm mx-auto space-y-6">
             <Button
               onClick={() => base44.auth.redirectToLogin('/after-login')}
               className="h-12 px-8 rounded-xl gap-2"
@@ -52,6 +83,43 @@ export default function Landing() {
               Enter BOND
               <ArrowRight className="w-4 h-4" />
             </Button>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => showDemo ? setShowDemo(false) : loadDemo()}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mx-auto"
+              >
+                Want to explore first? Try a demo account.
+                <ChevronDown className={`w-3 h-3 transition-transform ${showDemo ? 'rotate-180' : ''}`} />
+              </button>
+
+              {showDemo && (
+                <div className="grid grid-cols-2 gap-2 text-left">
+                  {demoLoading && <p className="col-span-2 text-xs text-muted-foreground text-center py-2">Loading…</p>}
+                  {demoProfiles.map(profile => (
+                    <button
+                      key={profile.id}
+                      onClick={() => enterAsDemo(profile)}
+                      className="bg-card border rounded-xl p-3 text-left hover:border-primary/40 hover:bg-secondary/50 transition-colors space-y-1"
+                    >
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-xs font-semibold capitalize truncate">{profile.name}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full shrink-0 ${
+                          profile.role === 'Family'
+                            ? 'bg-primary/10 text-primary'
+                            : 'bg-accent/20 text-accent-foreground'
+                        }`}>{profile.role}</span>
+                      </div>
+                      {profile.role === 'Family' ? (
+                        <p className="text-[11px] text-muted-foreground">{profile.neighborhood} · {profile.number_of_children} {profile.number_of_children === 1 ? 'child' : 'children'}</p>
+                      ) : (
+                        <p className="text-[11px] text-muted-foreground truncate">{(profile.offer_types || []).join(', ')}</p>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </motion.div>
         </motion.div>
 
