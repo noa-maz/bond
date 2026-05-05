@@ -37,6 +37,10 @@
     "pause_reason": {
       "type": "string",
       "title": "Pause Reason"
+    },
+    "is_demo": {
+      "type": "boolean",
+      "title": "Is Demo"
     }
   },
   "required": [

@@ -54,6 +54,10 @@
     "user_email": {
       "type": "string",
       "title": "User Email"
+    },
+    "is_demo": {
+      "type": "boolean",
+      "title": "Is Demo"
     }
   },
   "required": [

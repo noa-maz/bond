@@ -32,6 +32,7 @@ export default function BrowseFamilies() {
 
   const loadData = async () => {
     const userName = localStorage.getItem("bond_user_name");
+    const isDemoUser = userName && !userName.includes('@');
     const vols = await base44.entities.Volunteer.filter({ user_email: userName });
     const vol = vols[0];
     setVolunteer(vol);
@@ -75,8 +76,10 @@ export default function BrowseFamilies() {
     navigate('/volunteer-dashboard');
   };
 
+  const isDemoUser = !localStorage.getItem("bond_user_name")?.includes('@');
   const filteredFamilies = families.filter(family => {
     if (family.paused) return false;
+    if (family.is_demo && !isDemoUser) return false;
     if (areaFilter && !family.neighborhood?.toLowerCase().includes(areaFilter.toLowerCase())) return false;
     if (needFilter.length > 0) {
       const hasMatch = needFilter.some(nt => family.needs?.[NEED_KEY_MAP[nt]]?.selected);
