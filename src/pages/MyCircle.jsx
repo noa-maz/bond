@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Heart, Loader2, Users, Pencil, LogOut } from "lucide-react";
+import { Heart, Loader2, Users, Pencil, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 import CircleMember from "../components/CircleMember";
 import NeedsSelector from "../components/NeedsSelector";
@@ -82,11 +82,6 @@ export default function MyCircle() {
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="flex items-center gap-4 px-6 md:px-12 py-5">
-        <Link to="/">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-        </Link>
         <span className="font-serif text-xl tracking-tight flex-1">BOND</span>
         <Button
           size="sm"

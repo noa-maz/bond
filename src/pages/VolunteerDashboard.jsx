@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays, Pencil, Phone, LogOut } from "lucide-react";
+import { Heart, Loader2, MapPin, Baby, CalendarDays, Pencil, Phone, LogOut } from "lucide-react";
 
 const NEED_LABELS = {
   school_pickup: "School / kindergarten pickup",
@@ -118,11 +118,6 @@ export default function VolunteerDashboard() {
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="flex items-center gap-4 px-6 md:px-12 py-5">
-        <Link to="/">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-        </Link>
         <span className="font-serif text-xl tracking-tight flex-1">BOND</span>
         <Button
           size="sm"
