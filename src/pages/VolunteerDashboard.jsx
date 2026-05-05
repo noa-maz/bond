@@ -262,71 +262,64 @@ export default function VolunteerDashboard() {
 
             {families.map((family) => {
               const isApproved = volunteer.approved === true;
+              const needs = getFamilyNeeds(family.needs);
+              const lastUpdated = formatLastUpdated(family.updated_date);
+              const familyVisits = visits.filter(v => v.family_id === family.id && v.volunteer_id === volunteer.id);
               return (
               <div key={family.id} className={`bg-card rounded-2xl border p-6 space-y-4 ${!isApproved ? 'opacity-70' : ''}`}>
+
+                {/* 1. Header */}
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-serif text-2xl flex-shrink-0">
                     {family.name?.charAt(0).toUpperCase()}
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-xl">
-                      {family.name}'s Family
-                    </h3>
-                    <div className="flex flex-wrap gap-3 mt-1 text-sm text-muted-foreground">
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5" />
-                        {family.neighborhood}
-                      </span>
-                      <span className="inline-flex items-center gap-1">
-                        <Baby className="w-3.5 h-3.5" />
-                        {family.number_of_children}{" "}
-                        {family.number_of_children === 1 ? "child" : "children"}
-                      </span>
+                  <div className="space-y-0.5">
+                    <h3 className="font-semibold text-xl">{family.name}'s Family</h3>
+                    <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                      <span className="inline-flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{family.neighborhood}</span>
+                      <span className="inline-flex items-center gap-1"><Baby className="w-3.5 h-3.5" />{family.number_of_children} {family.number_of_children === 1 ? "child" : "children"}</span>
+                      {family.phone && (
+                        <a href={`tel:${family.phone}`} className="inline-flex items-center gap-1 text-primary hover:underline">
+                          <Phone className="w-3.5 h-3.5" />{family.phone}
+                        </a>
+                      )}
                     </div>
-                    {family.phone && (
-                      <a
-                        href={`tel:${family.phone}`}
-                        className="inline-flex items-center gap-1 mt-1 text-sm text-primary hover:underline"
-                      >
-                        <Phone className="w-3.5 h-3.5" />
-                        {family.phone}
-                      </a>
-                    )}
-                    {getFamilyNeeds(family.needs).length > 0 && (() => {
-                      const needs = getFamilyNeeds(family.needs);
-                      const lastUpdated = formatLastUpdated(family.updated_date);
-                      return (
-                        <div className="mt-2 space-y-1">
-                          <span className="text-xs text-muted-foreground font-medium">What they need most:</span>
-                          <div className="flex flex-wrap gap-2">
-                            {needs.map(({ label, note }) => (
-                              <div key={label} className="flex flex-col gap-0.5">
-                                <span className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">{label}</span>
-                                {note && <span className="text-xs text-muted-foreground italic px-1">{note}</span>}
-                              </div>
-                            ))}
-                          </div>
-                          {lastUpdated && (
-                            <p className={`text-xs ${lastUpdated.isRecent ? 'text-amber-600' : 'text-muted-foreground'}`}>
-                              Last updated: {lastUpdated.formatted}
-                            </p>
-                          )}
-                        </div>
-                      );
-                    })()}
                   </div>
                 </div>
 
-                {family.hardest_lately && (
-                  <div className="bg-secondary/50 rounded-xl px-4 py-3">
-                    <p className="text-sm text-muted-foreground italic leading-relaxed">
-                      "{family.hardest_lately}"
-                    </p>
+                {/* 2. Needs block */}
+                {needs.length > 0 && (
+                  <div className="bg-secondary/40 rounded-xl px-4 py-3 space-y-2">
+                    <span className="text-xs text-muted-foreground font-medium">What they need most:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {needs.map(({ label, note }) => (
+                        <div key={label} className="flex flex-col gap-0.5">
+                          <span className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">{label}</span>
+                          {note && <span className="text-xs text-muted-foreground italic px-1">{note}</span>}
+                        </div>
+                      ))}
+                    </div>
+                    {lastUpdated && (
+                      <p className={`text-xs ${lastUpdated.isRecent ? 'text-amber-600' : 'text-muted-foreground'}`}>
+                        Last updated: {lastUpdated.formatted}
+                      </p>
+                    )}
                   </div>
                 )}
 
+                {/* 3. Their words */}
+                {family.hardest_lately && (
+                  <p className="text-sm text-muted-foreground italic leading-relaxed">
+                    "{family.hardest_lately}"
+                  </p>
+                )}
+
+                {/* divider before commitment */}
+                <div className="border-t" />
+
+                {/* 4. Commitment line */}
                 {isApproved ? (
-                  <div className="flex items-center gap-2 text-primary text-sm font-medium pt-1">
+                  <div className="flex items-center gap-2 text-primary text-sm font-medium">
                     <Heart className="w-4 h-4 fill-primary" />
                     You chose them. That means everything.
                   </div>
@@ -337,24 +330,27 @@ export default function VolunteerDashboard() {
                   </div>
                 )}
 
-                {/* Scheduled visits for this family */}
-                {isApproved && visits.filter(v => v.family_id === family.id && v.volunteer_id === volunteer.id).length > 0 && (
-                  <div className="space-y-1">
-                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Your upcoming visits</p>
-                    {visits
-                      .filter(v => v.family_id === family.id && v.volunteer_id === volunteer.id)
-                      .sort((a, b) => a.date.localeCompare(b.date))
-                      .map(v => (
-                        <div key={v.id} className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <CalendarDays className="w-3.5 h-3.5 flex-shrink-0" />
-                          <span>{new Date(v.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
-                          <span>·</span>
-                          <span>{v.visit_type}</span>
-                        </div>
-                      ))}
-                  </div>
+                {/* 5. Upcoming visits */}
+                {isApproved && familyVisits.length > 0 && (
+                  <>
+                    <div className="border-t" />
+                    <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Your upcoming visits</p>
+                      {familyVisits
+                        .sort((a, b) => a.date.localeCompare(b.date))
+                        .map(v => (
+                          <div key={v.id} className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <CalendarDays className="w-3.5 h-3.5 flex-shrink-0" />
+                            <span>{new Date(v.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+                            <span>·</span>
+                            <span>{v.visit_type}</span>
+                          </div>
+                        ))}
+                    </div>
+                  </>
                 )}
 
+                {/* 6. Schedule a visit */}
                 {isApproved && (
                   <ScheduleVisitForm
                     familyId={family.id}
