@@ -72,6 +72,7 @@ export default function BrowseFamilies() {
       committed_family_ids: [...(prev.committed_family_ids || []), familyId],
     }));
     setCommitting(null);
+    navigate('/volunteer-dashboard');
   };
 
   const filteredFamilies = families.filter(family => {
