@@ -51,10 +51,9 @@ export default function MyCircle() {
   };
 
   const handleApprove = async (vol) => {
-    const updated = [...(vol.approved_family_ids || []), family.id];
-    await base44.entities.Volunteer.update(vol.id, { approved_family_ids: updated });
+    await base44.functions.invoke('approveVolunteer', { volunteer_id: vol.id, family_id: family.id });
     setVolunteers((prev) =>
-      prev.map((v) => (v.id === vol.id ? { ...v, approved_family_ids: updated } : v))
+      prev.map((v) => (v.id === vol.id ? { ...v, approved_family_ids: [...(v.approved_family_ids || []), family.id] } : v))
     );
   };
 
