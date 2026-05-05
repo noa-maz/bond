@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
     let emailsSent = 0;
 
     for (const vol of committed) {
-      const subject = `🌟 Good news — they're back`;
+      const subject = `💛 Your circle is active again`;
       const body = `<div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #2d2d2d; line-height: 1.7;">
       <p style="font-size: 22px; margin-bottom: 24px;">🌟</p>
       <p style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Good news — they're back</p>
