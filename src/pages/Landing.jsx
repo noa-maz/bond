@@ -91,10 +91,10 @@ export default function Landing() {
             <div className="space-y-3">
               <button
                 onClick={() => { if (showDemo) { setShowDemo(false); sessionStorage.setItem('bond_demo_open', 'false'); } else { loadDemo(); sessionStorage.setItem('bond_demo_open', 'true'); } }}
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mx-auto"
+                className="mx-auto flex items-center gap-1.5 border border-border rounded-lg px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-secondary/50 transition-colors"
               >
-                Want to explore first? Try a demo account.
-                <ChevronDown className={`w-3 h-3 transition-transform ${showDemo ? 'rotate-180' : ''}`} />
+                Explore the app
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showDemo ? 'rotate-180' : ''}`} />
               </button>
 
               {showDemo && (
