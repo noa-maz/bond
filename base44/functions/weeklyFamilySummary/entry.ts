@@ -20,8 +20,15 @@ Deno.serve(async (req) => {
 
     // Filter visits from the past week (completed = date is in the past)
     const recentVisits = visits.filter(v => v.date >= weekAgoStr && v.date < todayStr);
+    
+    // Filter upcoming visits (next 7 days)
+    const nextWeekStr = new Date(now);
+    nextWeekStr.setDate(nextWeekStr.getDate() + 7);
+    const nextWeekStrFormatted = nextWeekStr.toISOString().split('T')[0];
+    const upcomingVisits = visits.filter(v => v.date >= todayStr && v.date <= nextWeekStrFormatted);
 
     let emailsSent = 0;
+    let skipped = 0;
 
     for (const family of families) {
       const familyUser = users.find(u => u.email === family.user_email);
@@ -29,6 +36,13 @@ Deno.serve(async (req) => {
 
       const familyVisits = recentVisits.filter(v => v.family_id === family.id);
       if (familyVisits.length === 0) continue;
+      
+      // Check if family has upcoming visits
+      const familyUpcomingVisits = upcomingVisits.filter(v => v.family_id === family.id);
+      if (familyUpcomingVisits.length === 0) {
+        skipped++;
+        continue;
+      }
 
       const visitItems = familyVisits
         .sort((a, b) => a.date.localeCompare(b.date))
@@ -65,7 +79,7 @@ Deno.serve(async (req) => {
       emailsSent++;
     }
 
-    return Response.json({ success: true, emailsSent });
+    return Response.json({ success: true, emailsSent, skipped, reason: skipped > 0 ? 'Some families skipped due to no upcoming visits' : 'All families with past visits also have upcoming visits' });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
