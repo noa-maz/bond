@@ -310,8 +310,7 @@ export default function MyCircle() {
                           </button>
                           <button
                             onClick={async () => {
-                              const updated = (vol.committed_family_ids || []).filter(id => id !== family.id);
-                              await base44.entities.Volunteer.update(vol.id, { committed_family_ids: updated });
+                              await base44.functions.invoke('rejectVolunteer', { volunteer_id: vol.id, family_id: family.id });
                               setVolunteers(prev => prev.filter(v => v.id !== vol.id));
                             }}
                             className="px-4 py-1.5 rounded-lg border border-border text-sm font-medium hover:bg-secondary transition-colors sm:whitespace-nowrap"
