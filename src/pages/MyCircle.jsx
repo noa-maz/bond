@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Heart, Loader2, Users, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import CircleMember from "../components/CircleMember";
+import NeedsSelector from "../components/NeedsSelector";
 
 export default function MyCircle() {
   const [family, setFamily] = useState(null);
@@ -118,6 +119,7 @@ export default function MyCircle() {
                         phone: family.phone || '',
                         number_of_children: family.number_of_children,
                         hardest_lately: family.hardest_lately || '',
+                        needs: family.needs || {},
                       });
                       setEditing(true);
                     }}
@@ -169,6 +171,13 @@ export default function MyCircle() {
                     onChange={e => setEditForm(f => ({ ...f, number_of_children: parseInt(e.target.value, 10) || 0 }))}
                     onWheel={e => e.target.blur()}
                     className="h-11 rounded-xl bg-background"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>What does your family need help with?</Label>
+                  <NeedsSelector
+                    value={editForm.needs || {}}
+                    onChange={needs => setEditForm(f => ({ ...f, needs }))}
                   />
                 </div>
                 <div className="space-y-2">
