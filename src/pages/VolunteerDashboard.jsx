@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays, Pencil, Phone } from "lucide-react";
+import { ArrowLeft, Heart, Loader2, MapPin, Baby, CalendarDays, Pencil, Phone, LogOut } from "lucide-react";
 
 const NEED_LABELS = {
   school_pickup: "School / kindergarten pickup",
@@ -124,12 +124,15 @@ export default function VolunteerDashboard() {
           </Button>
         </Link>
         <span className="font-serif text-xl tracking-tight flex-1">BOND</span>
-        <button
+        <Button
+          size="sm"
+          variant="outline"
+          className="rounded-lg gap-1.5"
           onClick={() => { localStorage.removeItem("bond_user_name"); base44.auth.logout("/"); }}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
+          <LogOut className="w-3.5 h-3.5" />
           Sign out
-        </button>
+        </Button>
       </nav>
 
       <main className="flex-1 px-6 md:px-12 py-8 max-w-2xl mx-auto w-full">

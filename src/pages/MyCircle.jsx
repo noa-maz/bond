@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Heart, Loader2, Users, Pencil } from "lucide-react";
+import { ArrowLeft, Heart, Loader2, Users, Pencil, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 import CircleMember from "../components/CircleMember";
 import NeedsSelector from "../components/NeedsSelector";
@@ -88,12 +88,15 @@ export default function MyCircle() {
           </Button>
         </Link>
         <span className="font-serif text-xl tracking-tight flex-1">BOND</span>
-        <button
+        <Button
+          size="sm"
+          variant="outline"
+          className="rounded-lg gap-1.5"
           onClick={() => { localStorage.removeItem("bond_user_name"); base44.auth.logout("/"); }}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
+          <LogOut className="w-3.5 h-3.5" />
           Sign out
-        </button>
+        </Button>
       </nav>
 
       <main className="flex-1 px-6 md:px-12 py-8 max-w-2xl mx-auto w-full">
