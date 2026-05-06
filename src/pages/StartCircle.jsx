@@ -42,8 +42,9 @@ export default function StartCircle() {
   const update = (field) => (e) =>
     setForm((f) => ({ ...f, [field]: e.target.value }));
 
+  const childrenError = form.number_of_children !== "" && Number(form.number_of_children) < 1;
   const canSubmit =
-    form.name && form.neighborhood && form.number_of_children;
+    form.name && form.neighborhood && form.number_of_children && Number(form.number_of_children) >= 1;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -143,13 +144,16 @@ export default function StartCircle() {
               <Input
                 id="children"
                 type="number"
-                min="0"
+                min="1"
                 placeholder="e.g. 3"
                 value={form.number_of_children}
                 onChange={update("number_of_children")}
                 onWheel={e => e.target.blur()}
                 className="h-12 rounded-xl bg-card"
               />
+              {childrenError && (
+                <p className="text-xs text-destructive">Please enter at least 1 child</p>
+              )}
             </div>
 
             <div className="space-y-2">
