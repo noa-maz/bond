@@ -190,12 +190,15 @@ export default function MyCircle() {
                   <Label>Number of children</Label>
                   <Input
                     type="number"
-                    min="0"
+                    min="1"
                     value={editForm.number_of_children}
                     onChange={e => setEditForm(f => ({ ...f, number_of_children: parseInt(e.target.value, 10) || 0 }))}
                     onWheel={e => e.target.blur()}
                     className="h-11 rounded-xl bg-background"
                   />
+                  {(editForm.number_of_children === '' || Number(editForm.number_of_children) < 1) && editForm.number_of_children !== undefined && (
+                    <p className="text-xs text-destructive">Please enter at least 1 child</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label>What does your family need help with?</Label>
@@ -216,6 +219,7 @@ export default function MyCircle() {
                 <div className="flex gap-2 pt-1">
                   <Button
                     className="flex-1"
+                    disabled={!editForm.number_of_children || Number(editForm.number_of_children) < 1}
                     onClick={async () => {
                       await base44.entities.Family.update(family.id, editForm);
                       setFamily(f => ({ ...f, ...editForm }));
